@@ -4,15 +4,16 @@ import "gorm.io/gorm"
 
 type Topic struct {
 	gorm.Model
-	Name string
+	Name           string
+	TopicQuestions []*TopicQuestion `json:",omitempty"`
 }
 
 type TopicQuestion struct {
 	ID             uint `gorm:"primarykey"`
 	Question       string
-	QuestionNumber uint
-	CorrentAnswer  string `gorm:"type:varchar(10)"`
+	QuestionNumber uint   `gorm:"uniqueIndex:compositeindex; index; not null"`
+	CorrectAnswer  string `gorm:"type:varchar(10)"`
 	QuestionScore  float32
-	TopicID        uint
-	Topic          Topic
+	TopicID        uint   `gorm:"uniqueIndex:compositeindex; index; not null"`
+	Topic          *Topic `json:",omitempty"`
 }
