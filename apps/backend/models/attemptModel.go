@@ -1,14 +1,21 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Attempt struct {
 	gorm.Model
-	Score   float32
-	UserID  uint
-	User    *User `json:",omitempty"`
-	TopicID uint
-	Topic   *Topic `json:",omitempty"`
+	Score          float32
+	UserID         uint
+	User           *User `json:",omitempty"`
+	TopicID        uint
+	Topic          *Topic          `json:",omitempty"`
+	IsSubmitted    bool            `gorm:"default: false"`
+	SubmitDate     *time.Time      `json:",omitempty"`
+	AttemptAnswers []AttemptAnswer `json:",omitempty"`
 }
 
 type AttemptAnswer struct {

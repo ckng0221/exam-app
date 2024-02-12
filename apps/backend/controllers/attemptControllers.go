@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"slices"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -82,6 +84,49 @@ func UpdateOneAttempt(c *gin.Context) {
 	})
 
 	c.JSON(200, post)
+}
+
+func SubmitOneAttempt(c *gin.Context) {
+	id := c.Param("id")
+
+	var attempt models.Attempt
+	initializers.Db.First(&attempt, id)
+
+	if attempt.IsSubmitted {
+		c.AbortWithStatusJSON(422, gin.H{"error": "Already submitted"})
+		return
+	}
+
+	var correctAnswers []models.TopicQuestion
+	initializers.Db.Find(&correctAnswers).Where("topic_id = ?", attempt.TopicID)
+
+	var attemptAnswers []models.AttemptAnswer
+	initializers.Db.Find(&attemptAnswers).Where("attempt_id = ?", id)
+
+	var finalScore float32
+	for i := 0; i < len(attemptAnswers); i++ {
+		questionId := attemptAnswers[i].QuestionID
+		answer := attemptAnswers[i].Answer
+
+		correctAnswerIndex := slices.IndexFunc(attemptAnswers, func(c models.AttemptAnswer) bool { return c.QuestionID == questionId })
+		correctAnwer := correctAnswers[correctAnswerIndex].CorrectAnswer
+		correctScore := correctAnswers[correctAnswerIndex].QuestionScore
+
+		if answer == correctAnwer {
+			fmt.Println("correct!")
+			finalScore += correctScore
+		}
+		fmt.Println("Wrong!")
+	}
+	var submitDate = time.Now().UTC()
+	// Update Attempt
+	initializers.Db.Model(&attempt).Updates(models.Attempt{
+		Score:       finalScore,
+		IsSubmitted: true,
+		SubmitDate:  &submitDate,
+	})
+
+	c.JSON(http.StatusOK, gin.H{"score": finalScore, "Submit Date": submitDate})
 }
 
 func DeleteOneAttempt(c *gin.Context) {
@@ -182,4 +227,8 @@ func DeleteOneAttemptAnswer(c *gin.Context) {
 
 	// response
 	c.Status(202)
+}
+
+func calculateScore() {
+
 }
