@@ -4,7 +4,8 @@ import "gorm.io/gorm"
 
 type Topic struct {
 	gorm.Model
-	Name           string
+	Name           string           `gorm:"type:varchar(255)"`
+	Description    string           `gorm:"type:varchar(255)"`
 	TopicQuestions []*TopicQuestion `json:",omitempty"`
 }
 
