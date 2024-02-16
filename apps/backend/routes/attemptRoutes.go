@@ -20,6 +20,7 @@ func AttemptRoutes(r *gin.Engine) *gin.Engine {
 	// Attempt Answers
 	r.GET("/attempt-answers", controllers.GetAllAttemptAnswers)
 	r.POST("/attempt-answers", controllers.CreateAttemptAnswers)
+	r.PUT("/attempt-answers", controllers.CreateOrUpdateAttemptAnswer)
 	r.GET("/attempt-answers/:id", controllers.GetOneAttemptAnswer)
 	r.PATCH("/attempt-answers/:id", controllers.UpdateOneAttemptAnswer)
 	r.DELETE("/attempt-answers/:id", controllers.DeleteOneAttemptAnswer)

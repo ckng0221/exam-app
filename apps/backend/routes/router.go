@@ -1,11 +1,14 @@
 package routes
 
 import (
+	"exam-app/backend/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
+	r.Use(middleware.CORSMiddleware())
 
 	// Default
 	r.GET("/", func(c *gin.Context) {

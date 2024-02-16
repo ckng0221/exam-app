@@ -140,11 +140,18 @@ func DeleteOneAttempt(c *gin.Context) {
 
 func GetOneAttemptAnswers(c *gin.Context) {
 	id := c.Param("id")
+	questionId := c.Query("questionid")
 
-	var attemptQuestions []models.AttemptAnswer
-	initializers.Db.Find(&attemptQuestions).Where("attempt_id = ?", id)
+	m := make(map[string]interface{})
+	m["attempt_id"] = id
 
-	c.JSON(http.StatusOK, attemptQuestions)
+	if questionId != "" {
+		m["question_id"] = questionId
+	}
+	var attemptAnswers []models.AttemptAnswer
+	initializers.Db.Where(m).Find(&attemptAnswers)
+	c.JSON(http.StatusOK, attemptAnswers)
+
 }
 
 // Answers
@@ -179,6 +186,44 @@ func CreateAttemptAnswers(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, attemptAnswers)
+}
+
+func CreateOrUpdateAttemptAnswer(c *gin.Context) {
+
+	var attemptAnswer models.AttemptAnswer
+
+	var body struct {
+		AttemptId  uint
+		QuestionId uint
+		Answer     string
+	}
+	c.Bind(&body)
+
+	initializers.Db.Where("attempt_id = ? AND question_id = ?", body.AttemptId, body.QuestionId).First(&attemptAnswer)
+
+	if attemptAnswer.ID != 0 {
+		initializers.Db.Model(&attemptAnswer).Updates(models.AttemptAnswer{
+			AttemptID:  body.AttemptId,
+			QuestionID: body.QuestionId,
+			Answer:     body.Answer,
+		})
+
+		c.JSON(200, attemptAnswer)
+
+	} else {
+		answer := models.AttemptAnswer{
+			AttemptID:  body.AttemptId,
+			QuestionID: body.QuestionId,
+			Answer:     body.Answer,
+		}
+
+		result := initializers.Db.Create(&answer)
+		if result.Error != nil {
+			c.AbortWithStatus(500)
+			return
+		}
+		c.JSON(http.StatusCreated, attemptAnswer)
+	}
 }
 
 func GetOneAttemptAnswer(c *gin.Context) {
