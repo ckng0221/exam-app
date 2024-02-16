@@ -1,6 +1,10 @@
-export default async function Topic({ params }: { params: { id: string } }) {
+export default async function Topic({
+  params,
+}: {
+  params: { topicId: string };
+}) {
   const BASE_URL = "http://localhost:8000";
-  const endpoint = `${BASE_URL}/topics/${params.id}`;
+  const endpoint = `${BASE_URL}/topics/${params.topicId}`;
   const res = await fetch(endpoint, { cache: "no-cache" });
   const topic = await res.json();
 

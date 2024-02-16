@@ -7,6 +7,7 @@ func SynDatabase() {
 		&models.User{},
 		&models.Topic{},
 		&models.TopicQuestion{},
+		&models.QuestionOption{},
 		&models.Attempt{},
 		&models.AttemptAnswer{},
 	)

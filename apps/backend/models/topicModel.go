@@ -10,11 +10,20 @@ type Topic struct {
 }
 
 type TopicQuestion struct {
-	ID             uint `gorm:"primarykey"`
-	Question       string
-	QuestionNumber uint   `gorm:"uniqueIndex:compositeindex; index; not null"`
-	CorrectAnswer  string `gorm:"type:varchar(10)"`
-	QuestionScore  float32
-	TopicID        uint   `gorm:"uniqueIndex:compositeindex; index; not null"`
-	Topic          *Topic `json:",omitempty"`
+	ID              uint `gorm:"primarykey"`
+	Question        string
+	QuestionNumber  uint   `gorm:"uniqueIndex:idx_question_topic"`
+	CorrectAnswer   string `gorm:"type:varchar(10)"`
+	QuestionScore   float32
+	TopicID         uint              `gorm:"uniqueIndex:idx_question_topic"`
+	Topic           *Topic            `json:",omitempty"`
+	QuestionOptions []*QuestionOption `json:",omitempty" gorm:"foreignKey:QuestionID"`
+}
+
+type QuestionOption struct {
+	ID          uint `gorm:"primarykey"`
+	Description string
+	OptionCode  string         `gorm:"type:char(1); uniqueIndex:idx_code"`
+	QuestionID  uint           `gorm:"uniqueIndex:idx_code"`
+	Question    *TopicQuestion `json:",omitempty"`
 }

@@ -91,10 +91,16 @@ func DeleteOneTopic(c *gin.Context) {
 
 func GetOneTopicQuestions(c *gin.Context) {
 	id := c.Param("id")
+	questionNumber := c.Query("number")
 
 	var topicQuestions []models.TopicQuestion
-	initializers.Db.Find(&topicQuestions).Where("topic_id = ?", id)
+	m := make(map[string]interface{})
+	m["topic_id"] = id
 
+	if questionNumber != "" {
+		m["question_number"] = questionNumber
+	}
+	initializers.Db.Where(m).Find(&topicQuestions)
 	c.JSON(http.StatusOK, topicQuestions)
 }
 
@@ -137,7 +143,7 @@ func GetOneTopicQuestion(c *gin.Context) {
 	id := c.Param("id")
 
 	var topicQuestion models.TopicQuestion
-	result := initializers.Db.First(&topicQuestion, id)
+	result := initializers.Db.Preload("QuestionOptions").First(&topicQuestion, id)
 	if result.Error != nil {
 		fmt.Println(result.Error)
 	}
@@ -178,6 +184,87 @@ func DeleteOneTopicQuestion(c *gin.Context) {
 	id := c.Param("id")
 
 	initializers.Db.Delete(&models.TopicQuestion{}, id)
+
+	// response
+	c.Status(202)
+}
+
+// Question Options
+func GetAllQuestionOptions(c *gin.Context) {
+	var QuestionOptions []models.QuestionOption
+	initializers.Db.Find(&QuestionOptions)
+
+	c.JSON(http.StatusOK, QuestionOptions)
+}
+
+func CreateQuestionOptions(c *gin.Context) {
+	var QuestionOptions []models.QuestionOption
+
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		c.AbortWithError(400, err)
+		return
+	}
+	// fmt.Println(string(body))
+
+	err = json.Unmarshal(body, &QuestionOptions)
+	// fmt.Println(&QuestionOptions)
+
+	if err != nil {
+		c.AbortWithError(400, err)
+		return
+	}
+
+	result := initializers.Db.Create(&QuestionOptions)
+	if result.Error != nil {
+		c.AbortWithStatus(500)
+		return
+	}
+
+	c.JSON(http.StatusCreated, QuestionOptions)
+}
+
+func GetOneQuestionOption(c *gin.Context) {
+	id := c.Param("id")
+
+	var QuestionOption models.QuestionOption
+	result := initializers.Db.First(&QuestionOption, id)
+	if result.Error != nil {
+		fmt.Println(result.Error)
+	}
+	if QuestionOption.ID == 0 {
+		c.JSON(http.StatusOK, gin.H{})
+		return
+	}
+
+	c.JSON(http.StatusOK, QuestionOption)
+}
+
+func UpdateOneQuestionOption(c *gin.Context) {
+	// get the id
+	id := c.Param("id")
+	var post models.QuestionOption
+	initializers.Db.First(&post, id)
+
+	//
+	var body struct {
+		Description string
+		OptionCode  string
+	}
+	c.Bind(&body)
+
+	initializers.Db.Model(&post).Updates(models.QuestionOption{
+		Description: body.Description,
+		OptionCode:  body.OptionCode,
+	})
+
+	c.JSON(200, post)
+}
+
+func DeleteOneQuestionOption(c *gin.Context) {
+	id := c.Param("id")
+
+	initializers.Db.Delete(&models.QuestionOption{}, id)
 
 	// response
 	c.Status(202)

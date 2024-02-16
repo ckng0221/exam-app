@@ -24,5 +24,12 @@ func TopicRoutes(r *gin.Engine) *gin.Engine {
 	r.PATCH("/topic-questions/:id", controllers.UpdateOneTopicQuestion)
 	r.DELETE("/topic-questions/:id", controllers.DeleteOneTopicQuestion)
 
+	// Question Options
+	r.GET("/question-options", controllers.GetAllQuestionOptions)
+	r.POST("/question-options", controllers.CreateQuestionOptions)
+	r.GET("/question-options/:id", controllers.GetOneQuestionOption)
+	r.PATCH("/question-options/:id", controllers.UpdateOneQuestionOption)
+	r.DELETE("/question-options/:id", controllers.DeleteOneQuestionOption)
+
 	return r
 }
