@@ -104,6 +104,18 @@ func GetOneTopicQuestions(c *gin.Context) {
 	c.JSON(http.StatusOK, topicQuestions)
 }
 
+func GetOneTopicQuestionsCount(c *gin.Context) {
+	id := c.Param("id")
+
+	var topicQuestions []models.TopicQuestion
+	m := make(map[string]interface{})
+	m["topic_id"] = id
+
+	var totalQuestions int64
+	initializers.Db.Where(m).Find(&topicQuestions).Count(&totalQuestions)
+	c.JSON(http.StatusOK, totalQuestions)
+}
+
 // Questions
 func GetAllTopicQuestions(c *gin.Context) {
 	var topicQuestions []models.TopicQuestion

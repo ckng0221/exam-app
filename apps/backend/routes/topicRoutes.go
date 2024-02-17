@@ -14,6 +14,7 @@ func TopicRoutes(r *gin.Engine) *gin.Engine {
 	r.POST("/topics", controllers.CreateTopics)
 	r.GET("/topics/:id", controllers.GetOneTopic)
 	r.GET("/topics/:id/questions", controllers.GetOneTopicQuestions)
+	r.GET("/topics/:id/questions/count", controllers.GetOneTopicQuestionsCount)
 	r.PATCH("/topics/:id", controllers.UpdateOneTopic)
 	r.DELETE("/topics/:id", controllers.DeleteOneTopic)
 
