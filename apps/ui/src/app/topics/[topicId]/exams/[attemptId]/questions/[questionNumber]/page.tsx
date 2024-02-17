@@ -1,5 +1,7 @@
 import Link from "next/link";
 import AnswerOption from "./AnswerOption";
+import { getTotalQuestion } from "@/api/question";
+import { getAttemptAnswerByQuestionId } from "@/api/attempt";
 
 export default async function ExamAttempt({
   params,
@@ -30,31 +32,10 @@ export default async function ExamAttempt({
     return { questionId, question, questionDetail };
   }
 
-  async function getTotalQuestion() {
-    // Total question
-    const BASE_URL = "http://localhost:8000";
-    const endpoint = `${BASE_URL}/topics/${params.topicId}/questions/count`;
-    const res = await fetch(endpoint, { cache: "no-cache" });
-    const totalQuestions = await res.json();
-    return totalQuestions;
-  }
-
-  async function getAttemptAnswer() {
-    const BASE_URL = "http://localhost:8000";
-    const endpoint = `${BASE_URL}/attempts/${params.attemptId}/answers?`;
-    const res = await fetch(
-      endpoint +
-        new URLSearchParams({
-          questionid: questionId,
-        })
-    );
-    const data = await res.json();
-    return data[0]?.Answer;
-  }
-
   const { questionId, question, questionDetail } = await getQuestionDetails();
-  const existingAnswer = (await getAttemptAnswer()) || "";
-  const totalQuestions = (await getTotalQuestion()) || 0;
+  const existingAnswer =
+    (await getAttemptAnswerByQuestionId(params.attemptId, questionId)) || "";
+  const totalQuestions = (await getTotalQuestion(params.topicId)) || 0;
 
   const btnClass =
     "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800";
@@ -63,6 +44,7 @@ export default async function ExamAttempt({
   const nextQuestion = Number(params.questionNumber) + 1;
   const prevQuestionPath = `/topics/${params.topicId}/exams/${params.attemptId}/questions/${prevQuestion}`;
   const nextQuestionPath = `/topics/${params.topicId}/exams/${params.attemptId}/questions/${nextQuestion}`;
+  const reviewPath = `/topics/${params.topicId}/exams/${params.attemptId}/review`;
 
   function compareByOptionCode(a: any, b: any) {
     return a.OptionCode.localeCompare(b.OptionCode);
@@ -84,16 +66,22 @@ export default async function ExamAttempt({
 
       <div className="flex">
         {prevQuestion > 0 && (
-          <Link href={prevQuestionPath} type="button" className={btnClass}>
+          <a href={prevQuestionPath} type="button" className={btnClass}>
             Prev
-          </Link>
+          </a>
         )}
 
         {nextQuestion <= totalQuestions && (
-          <Link href={nextQuestionPath} type="button" className={btnClass}>
+          <a href={nextQuestionPath} type="button" className={btnClass}>
             Next
-          </Link>
+          </a>
         )}
+      </div>
+
+      <div>
+        <a href={reviewPath} type="button" className={btnClass}>
+          Review Answers
+        </a>
       </div>
     </div>
   );

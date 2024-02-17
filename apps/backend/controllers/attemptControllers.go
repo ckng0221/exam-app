@@ -98,10 +98,10 @@ func SubmitOneAttempt(c *gin.Context) {
 	}
 
 	var correctAnswers []models.TopicQuestion
-	initializers.Db.Find(&correctAnswers).Where("topic_id = ?", attempt.TopicID)
+	initializers.Db.Where("topic_id = ?", attempt.TopicID).Find(&correctAnswers)
 
 	var attemptAnswers []models.AttemptAnswer
-	initializers.Db.Find(&attemptAnswers).Where("attempt_id = ?", id)
+	initializers.Db.Where("attempt_id = ?", id).Find(&attemptAnswers)
 
 	var finalScore float32
 	for i := 0; i < len(attemptAnswers); i++ {
@@ -272,8 +272,4 @@ func DeleteOneAttemptAnswer(c *gin.Context) {
 
 	// response
 	c.Status(202)
-}
-
-func calculateScore() {
-
 }

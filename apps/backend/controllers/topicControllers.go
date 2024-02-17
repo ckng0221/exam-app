@@ -100,7 +100,7 @@ func GetOneTopicQuestions(c *gin.Context) {
 	if questionNumber != "" {
 		m["question_number"] = questionNumber
 	}
-	initializers.Db.Where(m).Find(&topicQuestions)
+	initializers.Db.Where(m).Find(&topicQuestions).Order("QuestionNumber")
 	c.JSON(http.StatusOK, topicQuestions)
 }
 
