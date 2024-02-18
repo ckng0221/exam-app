@@ -19,3 +19,6 @@ func main() {
 }
 
 // CompileDaemon -command="./backend"
+
+// generate swagger docs
+// swag init --parseDependency --parseInternal

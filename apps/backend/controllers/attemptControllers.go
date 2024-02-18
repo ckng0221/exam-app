@@ -14,6 +14,13 @@ import (
 )
 
 // Attempts
+
+// @Summary Get all attempts
+// @Tags Attempt
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /attempts [get]
 func GetAllAttempts(c *gin.Context) {
 	var attempts []models.Attempt
 	initializers.Db.Find(&attempts)
@@ -21,6 +28,18 @@ func GetAllAttempts(c *gin.Context) {
 	c.JSON(http.StatusOK, attempts)
 }
 
+type CreateAttempt struct {
+	UserId  uint
+	TopicId uint
+}
+
+// @Summary Create attempts
+// @Tags Attempt
+// @Param   body body []CreateAttempt true "Attempts"
+// @Accept json
+// @Produce json
+// @Success 201
+// @Router /attempts [post]
 func CreateAttempts(c *gin.Context) {
 	var attempts []models.Attempt
 
@@ -47,6 +66,13 @@ func CreateAttempts(c *gin.Context) {
 	c.JSON(http.StatusCreated, attempts)
 }
 
+// @Summary Get one attempt
+// @Tags Attempt
+// @Param id path int true "ID"
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /attempts/{id} [get]
 func GetOneAttempt(c *gin.Context) {
 	id := c.Param("id")
 

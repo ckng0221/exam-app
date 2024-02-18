@@ -12,6 +12,13 @@ import (
 )
 
 // Topics
+
+// @Summary Get all topics
+// @Tags Topic
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /topics [get]
 func GetAllTopics(c *gin.Context) {
 	var topics []models.Topic
 	initializers.Db.Find(&topics)
@@ -19,6 +26,18 @@ func GetAllTopics(c *gin.Context) {
 	c.JSON(http.StatusOK, topics)
 }
 
+type CreateTopic struct {
+	Name        string
+	Description string
+}
+
+// @Summary Create topics
+// @Tags Topic
+// @Param   body body []CreateTopic true "Topics"
+// @Accept json
+// @Produce json
+// @Success 201
+// @Router /topics [post]
 func CreateTopics(c *gin.Context) {
 	var topics []models.Topic
 
@@ -45,6 +64,13 @@ func CreateTopics(c *gin.Context) {
 	c.JSON(http.StatusCreated, topics)
 }
 
+// @Summary Get one topic
+// @Tags Topic
+// @Param id path int true "ID"
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /topics/{id} [get]
 func GetOneTopic(c *gin.Context) {
 	id := c.Param("id")
 

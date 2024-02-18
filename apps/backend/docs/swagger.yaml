@@ -1,0 +1,129 @@
+definitions:
+  controllers.CreateAttempt:
+    properties:
+      topicId:
+        type: integer
+      userId:
+        type: integer
+    type: object
+  controllers.CreateTopic:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Health check
+      tags:
+      - Default
+  /attempts:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get all attempts
+      tags:
+      - Attempt
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Attempts
+        in: body
+        name: body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/controllers.CreateAttempt'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      summary: Create attempts
+      tags:
+      - Attempt
+  /attempts/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get one attempt
+      tags:
+      - Attempt
+  /topics:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get all topics
+      tags:
+      - Topic
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Topics
+        in: body
+        name: body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/controllers.CreateTopic'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      summary: Create topics
+      tags:
+      - Topic
+  /topics/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get one topic
+      tags:
+      - Topic
+swagger: "2.0"
