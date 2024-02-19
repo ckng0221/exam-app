@@ -5,7 +5,13 @@ import Modal from "@/components/Modal";
 import { submitAnswer } from "@/api/attempt";
 import { useRouter } from "next/navigation";
 
-export default function SubmitBtn({ attemptId }: { attemptId: string }) {
+export default function SubmitBtn({
+  topicId,
+  attemptId,
+}: {
+  topicId: string;
+  attemptId: string;
+}) {
   const [openModal, setOpenModal] = React.useState(false);
 
   const router = useRouter();
@@ -13,7 +19,7 @@ export default function SubmitBtn({ attemptId }: { attemptId: string }) {
   async function handleSubmit(attemptId: string) {
     const data = await submitAnswer(attemptId);
     setOpenModal(false);
-    router.push("/topics/8/exams/8/result");
+    router.push(`/topics/${topicId}/exams/${attemptId}/result`);
   }
 
   return (

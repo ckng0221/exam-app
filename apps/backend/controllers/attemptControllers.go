@@ -22,9 +22,21 @@ import (
 // @Success 200
 // @Router /attempts [get]
 func GetAllAttempts(c *gin.Context) {
-	var attempts []models.Attempt
-	initializers.Db.Find(&attempts)
 
+	userId := c.Query("user_id")
+	topicId := c.Query("topic_id")
+
+	m := make(map[string]interface{})
+
+	if userId != "" {
+		m["user_id"] = userId
+	}
+	if topicId != "" {
+		m["topic_id"] = topicId
+	}
+
+	var attempts []models.Attempt
+	initializers.Db.Where(m).Find(&attempts)
 	c.JSON(http.StatusOK, attempts)
 }
 

@@ -1,6 +1,6 @@
 import { getAllQuestionsByTopic, getTotalQuestion } from "@/api/question";
 import _ from "lodash";
-import { getAttemptAnswers } from "@/api/attempt";
+import { getAttemptAnswers, getAttemptById } from "@/api/attempt";
 import Link from "next/link";
 import SubmitBtn from "./SubmitBtn";
 
@@ -9,12 +9,24 @@ interface IProps {
   attemptId: string;
 }
 
-export default function page({ params }: { params: IProps }) {
+export default async function page({ params }: { params: IProps }) {
+  const attempt = await getAttemptById(params.attemptId);
+  const isSubmitted = attempt.IsSubmitted;
+
   return (
     <div className="p-4 pl-16">
       <ReviewTable topicId={params.topicId} attemptId={params.attemptId} />
 
-      <SubmitBtn attemptId={params.attemptId} />
+      {isSubmitted ? (
+        <Link
+          href={`/topics/${params.topicId}/exams/${params.attemptId}/result`}
+          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+        >
+          Check Result
+        </Link>
+      ) : (
+        <SubmitBtn topicId={params.topicId} attemptId={params.attemptId} />
+      )}
     </div>
   );
 }

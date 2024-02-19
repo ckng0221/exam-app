@@ -6,7 +6,7 @@ export default function LocalDatetime({
 }: {
   utcDatetime: string;
 }) {
-  const dateStr = dayjs(utcDatetime).format("d/M/YYYY hh:mm:A");
+  const dateStr = dayjs(utcDatetime).format("DD/MM/YYYY hh:mm A");
 
   return <>{dateStr}</>;
 }
