@@ -75,7 +75,7 @@ func GetOneTopic(c *gin.Context) {
 	id := c.Param("id")
 
 	var topic models.Topic
-	result := initializers.Db.Preload("TopicQuestions").First(&topic, id)
+	result := initializers.Db.First(&topic, id)
 	if result.Error != nil {
 		fmt.Println(result.Error)
 	}

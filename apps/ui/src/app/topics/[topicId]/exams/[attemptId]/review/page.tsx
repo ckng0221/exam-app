@@ -1,21 +1,32 @@
-import { getAllQuestionsByTopic, getTotalQuestion } from "@/api/question";
-import _ from "lodash";
-import { getAttemptAnswers, getAttemptById } from "@/api/attempt";
+import {
+  IAttemptAnswer,
+  getAttemptAnswers,
+  getAttemptById,
+} from "@/api/attempt";
+import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/question";
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 import SubmitBtn from "./SubmitBtn";
 
 interface IProps {
   topicId: string;
   attemptId: string;
+  isSubmitted: boolean;
 }
 
 export default async function page({ params }: { params: IProps }) {
   const attempt = await getAttemptById(params.attemptId);
+
   const isSubmitted = attempt.IsSubmitted;
 
   return (
     <div className="p-4 pl-16">
-      <ReviewTable topicId={params.topicId} attemptId={params.attemptId} />
+      <ReviewTable
+        topicId={params.topicId}
+        attemptId={params.attemptId}
+        isSubmitted={isSubmitted}
+      />
 
       {isSubmitted ? (
         <Link
@@ -31,9 +42,9 @@ export default async function page({ params }: { params: IProps }) {
   );
 }
 
-async function ReviewTable({ topicId, attemptId }: IProps) {
-  const questions = await getAllQuestionsByTopic(topicId);
-  const attemptAnswers = await getAttemptAnswers(attemptId);
+async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
+  const questions: ITopicQuestion[] = await getAllQuestionsByTopic(topicId);
+  const attemptAnswers: IAttemptAnswer[] = await getAttemptAnswers(attemptId);
 
   //   const questionNumbers = _.range(totalQuestions);
   const questionPath = `/topics/${topicId}/exams/${attemptId}/questions`;
@@ -53,11 +64,10 @@ async function ReviewTable({ topicId, attemptId }: IProps) {
             </tr>
           </thead>
           <tbody>
-            {questions.map((question: any) => {
+            {questions.map((question) => {
               const questionAnswer = attemptAnswers.find(
                 (x: any) => x.QuestionID === question.ID
               );
-              //   console.log(questionAnswer);
 
               return (
                 <tr
@@ -76,6 +86,16 @@ async function ReviewTable({ topicId, attemptId }: IProps) {
                     <Link href={`${questionPath}/${question.QuestionNumber}`}>
                       {questionAnswer?.Answer || "_"}
                     </Link>
+                    &nbsp;
+                    {isSubmitted ? (
+                      question.CorrectAnswer === questionAnswer?.Answer ? (
+                        <DoneIcon color="success" />
+                      ) : (
+                        <CloseIcon color="error" />
+                      )
+                    ) : (
+                      <></>
+                    )}
                   </td>
                 </tr>
               );

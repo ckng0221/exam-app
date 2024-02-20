@@ -27,12 +27,12 @@ export default async function page({
         </p>
       </div>
       <div className="my-4">
-        <Link
+        <a
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
           href={reviewPath}
         >
           Review
-        </Link>
+        </a>
       </div>
     </div>
   );

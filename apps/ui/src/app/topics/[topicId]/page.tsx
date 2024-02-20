@@ -1,16 +1,13 @@
 import { redirect } from "next/navigation";
+import { getTopicById, getTotalQuestion } from "../../../api/question";
 
 export default async function Topic({
   params,
 }: {
   params: { topicId: string };
 }) {
-  const BASE_URL = "http://localhost:8000";
-  const endpoint = `${BASE_URL}/topics/${params.topicId}`;
-  const res = await fetch(endpoint, { cache: "no-cache" });
-  const topic = await res.json();
-
-  const questionCount = topic.TopicQuestions?.length || 0;
+  const topic = await getTopicById(params.topicId);
+  const questionCount = getTotalQuestion(params.topicId);
 
   return (
     <div className="p-4">

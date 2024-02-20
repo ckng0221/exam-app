@@ -1,38 +1,20 @@
-import Link from "next/link";
+import { getAttemptAnswerByQuestionId, getAttemptById } from "@/api/attempt";
+import { getQuestionDetails, getTotalQuestion } from "@/api/question";
 import AnswerOption from "./AnswerOption";
-import { getTotalQuestion } from "@/api/question";
-import { getAttemptAnswerByQuestionId } from "@/api/attempt";
 
 export default async function ExamAttempt({
   params,
 }: {
   params: { topicId: string; attemptId: string; questionNumber: string };
 }) {
-  async function getQuestionDetails() {
-    const BASE_URL = "http://localhost:8000";
-    const endpoint = `${BASE_URL}/topics/${params.topicId}/questions?`;
+  const attempt = await getAttemptById(params.attemptId);
+  const isSubmitted = attempt.IsSubmitted ? true : false;
+  const { questionId, question, questionDetail } = await getQuestionDetails(
+    params.topicId,
+    params.questionNumber
+  );
+  const correctAnswer = isSubmitted ? questionDetail.CorrectAnswer : "";
 
-    const res = await fetch(
-      endpoint +
-        new URLSearchParams({
-          number: params.questionNumber,
-        }),
-      { cache: "no-cache" }
-    );
-    const questions = await res.json();
-    const question = questions[0];
-    const questionId = question.ID;
-
-    const questionDetailsEndpoint = `${BASE_URL}/topic-questions/${questionId}`;
-    const questRes = await fetch(questionDetailsEndpoint, {
-      cache: "no-cache",
-    });
-    const questionDetail = await questRes.json();
-
-    return { questionId, question, questionDetail };
-  }
-
-  const { questionId, question, questionDetail } = await getQuestionDetails();
   const existingAnswer =
     (await getAttemptAnswerByQuestionId(params.attemptId, questionId)) || "";
   const totalQuestions = (await getTotalQuestion(params.topicId)) || 0;
@@ -58,10 +40,13 @@ export default async function ExamAttempt({
       </div>
 
       <AnswerOption
+        isSubmitted={isSubmitted}
         attemptId={params.attemptId}
         questionId={questionId}
         options={questionDetail.QuestionOptions?.sort(compareByOptionCode)}
         existingAnswer={existingAnswer}
+        radioDisabled={isSubmitted}
+        correctAnswer={correctAnswer}
       />
 
       <div className="flex">
@@ -80,7 +65,7 @@ export default async function ExamAttempt({
 
       <div>
         <a href={reviewPath} type="button" className={btnClass}>
-          Review Answers
+          {!isSubmitted ? "Review Answers" : "View Summary"}
         </a>
       </div>
     </div>
