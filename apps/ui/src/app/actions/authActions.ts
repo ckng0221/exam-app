@@ -3,27 +3,31 @@ import { login, signup } from "@/api/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getUsers } from "../../api/user";
+// import { revalidatePath } from "next/cache";
 
-export async function loginAction(prevState: any, formData: FormData) {
+export async function loginAction(formData: FormData) {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
 
-  if (email == null) throw "Email cannot be null";
-  if (password == null) throw "Password cannot be null";
-  const res = await login(email, password);
-  //   console.log(res);
-  if (res.access_token) {
-    // set cookies
-    cookies().set({
-      name: "Authorization",
-      value: res.access_token,
-      httpOnly: true,
-      path: "/",
-    });
-
-    redirect("/");
-  } else {
-    return { message: "Please enter a valid email or password" };
+  try {
+    if (email == null) throw "Email cannot be null";
+    if (password == null) throw "Password cannot be null";
+    const res = await login(email, password);
+    //   console.log(res);
+    if (res.access_token) {
+      // set cookies
+      cookies().set({
+        name: "Authorization",
+        value: res.access_token,
+        httpOnly: true,
+        path: "/",
+      });
+      return { message: "success" };
+    } else {
+      return { message: "Email or password incorrect." };
+    }
+  } catch (err) {
+    return { error: "Login Error" };
   }
 }
 
@@ -31,8 +35,13 @@ export async function logoutAction() {
   try {
     cookies().delete("Authorization");
 
-    redirect("/");
-  } catch (err) {}
+    // revalidatePath("/");
+    // redirect("/");
+  } catch (err) {
+    return {
+      error: "Failed to logout",
+    };
+  }
 }
 
 async function verifyEmail(email: string) {

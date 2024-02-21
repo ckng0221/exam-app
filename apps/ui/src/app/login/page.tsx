@@ -1,20 +1,33 @@
 "use client";
 import { loginAction } from "../actions/authActions";
-import { useFormState } from "react-dom";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export default async function page() {
-  const initialState = {
-    message: "",
-  };
-  const [state, formAction] = useFormState(loginAction, initialState);
+export default function page() {
+  const [msgState, setMsgState] = useState<any>({ message: "", error: "" });
+  const router = useRouter();
+
+  async function handleLogin(formData: FormData) {
+    // Mix server action and client action
+    const res = await loginAction(formData);
+    setMsgState(res);
+    console.log(res);
+
+    if (res?.message === "success") {
+      const username = formData.get("email")?.toString().split("@")[0] || "";
+      router.push("/");
+      toast.success(`Welcome ${username}!`);
+    }
+  }
 
   return (
     <div className="p-4 flex">
       <div className="w-full max-w-xs">
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-          action={formAction}
+          action={handleLogin}
         >
           <div className="mb-4">
             <label
@@ -45,7 +58,7 @@ export default async function page() {
             />
           </div>
           <p aria-live="polite" className="text-red-500 mb-4">
-            {state?.message}
+            {msgState?.message !== "success" && msgState?.message}
           </p>
           <div className="flex items-center justify-between">
             <button

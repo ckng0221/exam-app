@@ -1,13 +1,18 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { logoutAction } from "../app/actions/authActions";
 import Modal from "./Modal";
-import { useState } from "react";
 
 export default function LogoutBtn() {
   const [showModal, setShowModal] = useState(false);
   async function handleConfirm() {
-    await logoutAction();
+    const result = await logoutAction();
+    if (result?.error) {
+      toast.error("Failed to log out.");
+    }
+    toast.success("Logged out");
   }
 
   return (
