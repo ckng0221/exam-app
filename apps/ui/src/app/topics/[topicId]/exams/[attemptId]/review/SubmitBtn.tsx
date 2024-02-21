@@ -4,6 +4,7 @@ import React from "react";
 import Modal from "@/components/Modal";
 import { submitAnswer } from "@/api/attempt";
 import { useRouter } from "next/navigation";
+import { revalidateLayout } from "@/app/actions/revalidateActions";
 
 export default function SubmitBtn({
   topicId,
@@ -19,6 +20,7 @@ export default function SubmitBtn({
   async function handleSubmit(attemptId: string) {
     const data = await submitAnswer(attemptId);
     setOpenModal(false);
+    await revalidateLayout();
     router.push(`/topics/${topicId}/exams/${attemptId}/result`);
   }
 

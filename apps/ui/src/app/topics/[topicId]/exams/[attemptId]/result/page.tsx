@@ -11,6 +11,7 @@ export default async function page({
   const attempt = await getAttemptById(params.attemptId);
 
   const reviewPath = `/topics/${params.topicId}/exams/${params.attemptId}/review`;
+  const questionPath = `/topics/${params.topicId}/exams/${params.attemptId}/questions/1`;
 
   return (
     <div className="p-4 px-16">
@@ -31,7 +32,14 @@ export default async function page({
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
           href={reviewPath}
         >
-          Review
+          Review Summary
+        </Link>
+        <br />
+        <Link
+          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+          href={questionPath}
+        >
+          Review Questions
         </Link>
       </div>
     </div>

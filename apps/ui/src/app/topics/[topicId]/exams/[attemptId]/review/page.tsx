@@ -91,7 +91,13 @@ async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
                       question.CorrectAnswer === questionAnswer?.Answer ? (
                         <DoneIcon color="success" />
                       ) : (
-                        <CloseIcon color="error" />
+                        <>
+                          <CloseIcon color="error" />
+                          &nbsp;{" "}
+                          <span className="text-red-500 font-medium text-md">
+                            {question.CorrectAnswer}
+                          </span>
+                        </>
                       )
                     ) : (
                       <></>

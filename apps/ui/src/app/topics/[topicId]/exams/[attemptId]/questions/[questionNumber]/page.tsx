@@ -68,6 +68,7 @@ export default async function ExamAttempt({
         <Link href={reviewPath} type="button" className={btnClass}>
           {!isSubmitted ? "Review Answers" : "View Summary"}
         </Link>
+        <br />
       </div>
     </div>
   );
