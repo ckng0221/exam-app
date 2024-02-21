@@ -54,7 +54,7 @@ async function verifyEmail(email: string) {
   return true;
 }
 
-export async function signupAction(prevState: any, formData: FormData) {
+export async function signupAction(formData: FormData) {
   const name = formData.get("name")?.toString();
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
@@ -68,7 +68,8 @@ export async function signupAction(prevState: any, formData: FormData) {
   const res = await signup(name, email, password);
   // console.log(res);
   if (res.ID) {
-    redirect("/login");
+    return { message: "success" };
+    // redirect("/login");
   } else {
     return { message: "Failed to sign up" };
   }

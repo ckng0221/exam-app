@@ -1,9 +1,9 @@
 "use client";
-import { loginAction } from "../actions/authActions";
-import { useState } from "react";
-import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import { loginAction } from "../actions/authActions";
 
 export default function page() {
   const [msgState, setMsgState] = useState<any>({ message: "", error: "" });

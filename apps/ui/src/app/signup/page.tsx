@@ -1,17 +1,22 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { useFormState } from "react-dom";
+// import { useFormState } from "react-dom";
 import { signupAction } from "../actions/authActions";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function page() {
-  const initialState = {
-    message: "",
-  };
-  const [state, formAction] = useFormState(signupAction, initialState);
+  // const initialState = {
+  //   message: "",
+  // };
+  // const [state, formAction] = useFormState(signupAction, initialState);
+  const [msgState, setMsgState] = useState<any>({ message: "", error: "" });
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassErr, setShowPassErr] = useState(false);
+  const router = useRouter();
 
   function verifyPassword() {
     if (password !== confirmPassword) {
@@ -20,14 +25,19 @@ export default function page() {
     return true;
   }
 
-  function handleSubmit(formData: FormData) {
+  async function handleSubmit(formData: FormData) {
     setShowPassErr(false);
 
     if (!verifyPassword()) {
       setShowPassErr(true);
       return;
     }
-    return formAction(formData);
+    const res = await signupAction(formData);
+    setMsgState(res);
+    if (res.message === "success") {
+      toast.success("Sign up successful! Please login.");
+      router.push("/login");
+    }
   }
 
   return (
@@ -109,7 +119,7 @@ export default function page() {
             </p>
           )}
           <p aria-live="polite" className="text-red-500 mb-4">
-            {state?.message}
+            {msgState?.message !== "success" && msgState?.message}
           </p>
           <div className="mt-6 flex items-center justify-between">
             <button
