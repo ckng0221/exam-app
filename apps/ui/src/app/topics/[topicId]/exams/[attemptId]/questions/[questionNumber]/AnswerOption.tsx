@@ -1,8 +1,13 @@
 "use client";
-import { useState } from "react";
 import { createOrUpdateAnswer } from "@/api/attempt";
-import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
+import { useState } from "react";
+import {
+  revalidateLayout,
+  revalidatePage,
+} from "@/app/actions/revalidateActions";
+// import { revalidateLayout } from "@/app/actions/revalidateActions";
 
 interface IOption {
   ID: string;
@@ -35,6 +40,7 @@ export default function Options({
 
     // update db
     await createOrUpdateAnswer(attemptId, questionId, answer);
+    await revalidateLayout();
   }
 
   return options?.map((option) => (

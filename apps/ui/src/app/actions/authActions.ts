@@ -3,7 +3,7 @@ import { login, signup } from "@/api/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getUsers } from "../../api/user";
-// import { revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 export async function loginAction(formData: FormData) {
   const email = formData.get("email")?.toString();

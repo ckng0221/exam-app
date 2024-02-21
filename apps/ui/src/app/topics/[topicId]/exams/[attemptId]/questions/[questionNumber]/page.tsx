@@ -1,6 +1,7 @@
 import { getAttemptAnswerByQuestionId, getAttemptById } from "@/api/attempt";
 import { getQuestionDetails, getTotalQuestion } from "@/api/question";
 import AnswerOption from "./AnswerOption";
+import Link from "next/link";
 
 export default async function ExamAttempt({
   params,
@@ -51,22 +52,22 @@ export default async function ExamAttempt({
 
       <div className="flex">
         {prevQuestion > 0 && (
-          <a href={prevQuestionPath} type="button" className={btnClass}>
+          <Link href={prevQuestionPath} type="button" className={btnClass}>
             Prev
-          </a>
+          </Link>
         )}
 
         {nextQuestion <= totalQuestions && (
-          <a href={nextQuestionPath} type="button" className={btnClass}>
+          <Link href={nextQuestionPath} type="button" className={btnClass}>
             Next
-          </a>
+          </Link>
         )}
       </div>
 
       <div>
-        <a href={reviewPath} type="button" className={btnClass}>
+        <Link href={reviewPath} type="button" className={btnClass}>
           {!isSubmitted ? "Review Answers" : "View Summary"}
-        </a>
+        </Link>
       </div>
     </div>
   );
