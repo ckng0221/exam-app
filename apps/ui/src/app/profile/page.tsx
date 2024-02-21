@@ -51,28 +51,33 @@ async function Attempts({ user_id }: { user_id: string }) {
   return (
     <div>
       <h1 className="font-bold text-lg mb-4">Attempts</h1>
-      <ul>
-        {attempts.map((attempt) => (
-          <li key={attempt.ID}>
-            <Link
-              href={`topics/${attempt.TopicID}/exams/${attempt.ID}/result`}
-              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-            >
-              ID {attempt.ID} : Topic {attempt.TopicID} : Score: {attempt.Score}
-            </Link>
-            &nbsp;
-            {attempt.IsSubmitted ? (
-              <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                Completed
-              </span>
-            ) : (
-              <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
-                In progress
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
+      {attempts.length > 0 ? (
+        <ul>
+          {attempts.map((attempt) => (
+            <li key={attempt.ID}>
+              <Link
+                href={`topics/${attempt.TopicID}/exams/${attempt.ID}/result`}
+                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                ID {attempt.ID} : Topic {attempt.TopicID} : Score:{" "}
+                {attempt.Score}
+              </Link>
+              &nbsp;
+              {attempt.IsSubmitted ? (
+                <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                  Completed
+                </span>
+              ) : (
+                <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                  In progress
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <>No attempts</>
+      )}
     </div>
   );
 }

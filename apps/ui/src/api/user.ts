@@ -1,8 +1,15 @@
 const BASE_URL = "http://localhost:8000";
 
-export async function getUsers() {
-  const endpoint = `${BASE_URL}/users`;
-  const res = await fetch(endpoint, { cache: "no-cache" });
+export async function getUsers({ email }: { email?: string }) {
+  const endpoint = `${BASE_URL}/users?`;
+
+  const queryParam: any = {};
+  if (email) queryParam["email"] = email;
+
+  const res = await fetch(endpoint + new URLSearchParams(queryParam), {
+    cache: "no-store",
+  });
+
   const users = await res.json();
   return users;
 }

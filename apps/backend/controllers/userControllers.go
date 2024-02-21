@@ -53,8 +53,16 @@ func Signup(c *gin.Context) {
 }
 
 func GetAllUsers(c *gin.Context) {
+	email := c.Query("email")
+
+	m := make(map[string]interface{})
+
+	if email != "" {
+		m["email"] = email
+	}
+
 	var users []models.User
-	initializers.Db.Find(&users)
+	initializers.Db.Where(m).Find(&users)
 
 	c.JSON(http.StatusOK, users)
 }

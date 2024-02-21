@@ -1,6 +1,7 @@
 "use client";
 import { loginAction } from "../actions/authActions";
 import { useFormState } from "react-dom";
+import Link from "next/link";
 
 export default async function page() {
   const initialState = {
@@ -60,6 +61,13 @@ export default async function page() {
               Forgot Password?
             </a>
           </div>
+          Don't have an account?&nbsp;
+          <Link
+            className="mt-4 inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+            href="signup"
+          >
+            Sign up
+          </Link>
         </form>
       </div>
     </div>

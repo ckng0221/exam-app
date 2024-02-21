@@ -35,3 +35,18 @@ export async function logout() {
   const data = await res.json();
   return data;
 }
+
+export async function signup(name: string, email: string, password: string) {
+  const endpoint = `${BASE_URL}/signup`;
+
+  const payload = JSON.stringify({ name, email, password });
+  const res = await fetch(endpoint, {
+    method: "POST",
+    body: payload,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const signup = await res.json();
+  return signup;
+}
