@@ -2,13 +2,25 @@ import React from "react";
 import { getUserById } from "@/api/user";
 import { IAttempt, getAttempts } from "@/api/attempt";
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { validateCookieToken } from "@/api/auth";
+import { Unauthorized } from "@/components/error/ErrorComp";
 
 export default async function page() {
-  const userID = "1"; //TODO: get user based on auth token
+  const accessToken = cookies().get("Authorization");
 
-  const user = await getUserById(userID);
+  let isLoggedIn = false;
 
-  if (!user.ID) throw "User not found";
+  let user;
+  if (accessToken) {
+    user = await validateCookieToken(accessToken.value);
+    if (user.ID) {
+      isLoggedIn = true;
+    }
+  }
+  if (!user?.ID) return <Unauthorized />;
+
+  // const user = await getUserById(userID);
 
   return (
     <div className="p-4">

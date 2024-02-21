@@ -33,7 +33,7 @@ func RequireAuth(c *gin.Context) {
 	})
 	if err != nil {
 		// return
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Cannot JWT error"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token not found"})
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
@@ -57,7 +57,7 @@ func RequireAuth(c *gin.Context) {
 		// Continue
 		c.Next()
 
-		fmt.Println(claims["foo"], claims["nbf"])
+		// fmt.Println(claims["foo"], claims["nbf"])
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
