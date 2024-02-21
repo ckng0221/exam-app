@@ -24,13 +24,13 @@ export default async function NavBar() {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <Image
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
-            alt="Flowbite Logo"
+            src="/examicon.png"
+            alt="Exam App Icon"
             width={50}
-            height={50}
+            height={100}
             unoptimized
           />
+
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             Exam App
           </span>

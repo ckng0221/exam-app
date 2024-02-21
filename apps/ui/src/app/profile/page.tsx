@@ -1,10 +1,8 @@
-import React from "react";
-import { getUserById } from "@/api/user";
 import { IAttempt, getAttempts } from "@/api/attempt";
-import Link from "next/link";
-import { cookies } from "next/headers";
 import { validateCookieToken } from "@/api/auth";
 import { Unauthorized } from "@/components/error/ErrorComp";
+import { cookies } from "next/headers";
+import Link from "next/link";
 
 export default async function page() {
   const accessToken = cookies().get("Authorization");
