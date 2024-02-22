@@ -6,6 +6,7 @@ type Topic struct {
 	gorm.Model
 	Name           string           `gorm:"type:varchar(255)"`
 	Description    string           `gorm:"type:varchar(255)"`
+	PassPercentage float32          `json:",omitempty"`
 	TopicQuestions []*TopicQuestion `json:",omitempty"`
 }
 

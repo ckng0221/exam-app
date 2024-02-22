@@ -7,7 +7,8 @@ export default async function Topic({
   params: { topicId: string };
 }) {
   const topic = await getTopicById(params.topicId);
-  const questionCount = getTotalQuestion(params.topicId);
+  const questionCount = await getTotalQuestion(params.topicId);
+  // console.log(topic);
 
   return (
     <div className="p-4">
@@ -20,6 +21,9 @@ export default async function Topic({
         </p>
         <p>
           Total Questions: <b>{questionCount}</b>
+        </p>
+        <p>
+          Passing Precentage: <b>{topic.PassPercentage} %</b>
         </p>
       </div>
 
