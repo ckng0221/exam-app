@@ -1,9 +1,7 @@
-import React from "react";
 import { getAttemptById } from "@/api/attempt";
-import LocalDatetime from "@/components/LocalDate";
+import { LocalDatetime } from "@/components/LocalDate";
 import Link from "next/link";
 import Badge from "../../../../../../components/Badge";
-import { getTopicById } from "../../../../../../api/question";
 
 export default async function page({
   params,
@@ -18,22 +16,26 @@ export default async function page({
 
   return (
     <div className="p-4 px-16">
-      Your result:
-      <div className="mt-4">
-        <p>
-          Submission date:{" "}
-          <b>
-            <LocalDatetime utcDatetime={attempt.SubmitDate} />
-          </b>
-        </p>
-        <p>
-          Final Score: <b>{attempt.Score}</b>
-          &nbsp;({attempt.ScorePercentage}%)
-        </p>
-        <p>
-          Status: <Badge color={badgeColor} content={passOrFail} />
-        </p>
-      </div>
+      {attempt.IsSubmitted && (
+        <div>
+          Your result:
+          <div className="mt-4">
+            <p>
+              Submission date:{" "}
+              <b>
+                <LocalDatetime utcDatetime={attempt.SubmitDate} />
+              </b>
+            </p>
+            <p>
+              Final Score: <b>{attempt.Score}</b>
+              &nbsp;({attempt.ScorePercentage}%)
+            </p>
+            <p>
+              Status: <Badge color={badgeColor} content={passOrFail} />
+            </p>
+          </div>
+        </div>
+      )}
       <div className="my-4">
         <Link
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"

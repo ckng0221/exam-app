@@ -193,6 +193,23 @@ func GetOneTopicQuestion(c *gin.Context) {
 	c.JSON(http.StatusOK, topicQuestion)
 }
 
+// Hide fields that shouldn't present with advanced query
+func GetOneTopicQuestionSafe(c *gin.Context) {
+	id := c.Param("id")
+
+	var topicQuestionSafe models.TopicQuestionSafe
+	result := initializers.Db.Model(&models.TopicQuestion{}).Preload("QuestionOptions").First(&topicQuestionSafe, id)
+	if result.Error != nil {
+		fmt.Println(result.Error)
+	}
+	if topicQuestionSafe.ID == 0 {
+		c.JSON(http.StatusOK, gin.H{})
+		return
+	}
+
+	c.JSON(http.StatusOK, topicQuestionSafe)
+}
+
 func UpdateOneTopicQuestion(c *gin.Context) {
 	// get the id
 	id := c.Param("id")

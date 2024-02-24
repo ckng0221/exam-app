@@ -23,6 +23,15 @@ type TopicQuestion struct {
 	QuestionOptions []*QuestionOption `json:",omitempty" gorm:"foreignKey:QuestionID"`
 }
 
+type TopicQuestionSafe struct {
+	ID              uint `gorm:"primarykey"`
+	Question        string
+	QuestionNumber  uint              `gorm:"uniqueIndex:idx_question_topic"`
+	TopicID         uint              `gorm:"uniqueIndex:idx_question_topic"`
+	Topic           *Topic            `json:",omitempty"`
+	QuestionOptions []*QuestionOption `json:",omitempty" gorm:"foreignKey:QuestionID"`
+}
+
 type QuestionOption struct {
 	ID          uint `gorm:"primarykey"`
 	Description string

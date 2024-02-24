@@ -55,3 +55,29 @@ export async function getQuestionDetails(
 
   return { questionId, question, questionDetail };
 }
+
+export async function getQuestionDetailsSafe(
+  topicId: string,
+  questionNumber: string
+) {
+  const endpoint = `${BASE_URL}/topics/${topicId}/questions?`;
+
+  const res = await fetch(
+    endpoint +
+      new URLSearchParams({
+        number: questionNumber,
+      }),
+    { cache: "no-cache" }
+  );
+  const questions = await res.json();
+  const question = questions[0];
+  const questionId = question.ID;
+
+  const questionDetailsEndpoint = `${BASE_URL}/topic-questions-safe/${questionId}`;
+  const questRes = await fetch(questionDetailsEndpoint, {
+    cache: "no-cache",
+  });
+  const questionDetail = await questRes.json();
+
+  return { questionId, question, questionDetail };
+}

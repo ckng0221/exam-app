@@ -1,5 +1,9 @@
 import { getAttemptAnswerByQuestionId, getAttemptById } from "@/api/attempt";
-import { getQuestionDetails, getTotalQuestion } from "@/api/question";
+import {
+  getQuestionDetails,
+  getQuestionDetailsSafe,
+  getTotalQuestion,
+} from "@/api/question";
 import AnswerOption from "./AnswerOption";
 import Link from "next/link";
 
@@ -10,11 +14,23 @@ export default async function ExamAttempt({
 }) {
   const attempt = await getAttemptById(params.attemptId);
   const isSubmitted = attempt.IsSubmitted ? true : false;
-  const { questionId, question, questionDetail } = await getQuestionDetails(
-    params.topicId,
-    params.questionNumber
-  );
-  const correctAnswer = isSubmitted ? questionDetail.CorrectAnswer : "";
+  let questionId, question, questionDetail;
+  let fetchResult;
+  if (isSubmitted) {
+    fetchResult = await getQuestionDetails(
+      params.topicId,
+      params.questionNumber
+    );
+  } else {
+    fetchResult = await getQuestionDetailsSafe(
+      params.topicId,
+      params.questionNumber
+    );
+  }
+  questionId = fetchResult.questionId;
+  question = fetchResult.question;
+  questionDetail = fetchResult.questionDetail;
+  const correctAnswer = isSubmitted ? questionDetail?.CorrectAnswer : "";
 
   const existingAnswer =
     (await getAttemptAnswerByQuestionId(params.attemptId, questionId)) || "";
