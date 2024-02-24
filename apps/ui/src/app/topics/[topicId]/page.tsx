@@ -8,6 +8,7 @@ export default async function Topic({
 }) {
   const topic = await getTopicById(params.topicId);
   const questionCount = await getTotalQuestion(params.topicId);
+
   // console.log(topic);
 
   return (

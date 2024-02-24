@@ -8,6 +8,8 @@ type Topic struct {
 	Description    string           `gorm:"type:varchar(255)"`
 	PassPercentage float32          `json:",omitempty"`
 	TopicQuestions []*TopicQuestion `json:",omitempty"`
+	// computed fields
+	TotalScore float32 `gorm:"-:migration" json:",omitempty"`
 }
 
 type TopicQuestion struct {

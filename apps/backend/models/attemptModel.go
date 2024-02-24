@@ -8,7 +8,7 @@ import (
 
 type Attempt struct {
 	gorm.Model
-	Score          float32
+	Score          float32 `json:",omitempty"`
 	UserID         uint
 	User           *User `json:",omitempty"`
 	TopicID        uint
@@ -16,6 +16,9 @@ type Attempt struct {
 	IsSubmitted    bool            `gorm:"default: false"`
 	SubmitDate     *time.Time      `json:",omitempty"`
 	AttemptAnswers []AttemptAnswer `json:",omitempty"`
+	// Denormalized fields, to retain historical record
+	ScorePercentage float32 `json:",omitempty"`
+	IsPass          bool
 }
 
 type AttemptAnswer struct {

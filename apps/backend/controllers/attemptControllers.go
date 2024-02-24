@@ -135,6 +135,12 @@ func SubmitOneAttempt(c *gin.Context) {
 		return
 	}
 
+	var topic models.Topic
+	initializers.Db.Table("topics as t").
+		Select("t.*, q.total_score").
+		Joins("JOIN (SELECT topic_id, SUM(question_score) AS total_score FROM topic_questions GROUP BY topic_id) AS q ON t.id = q.topic_id").
+		Where("t.id = ?", attempt.TopicID).Scan(&topic)
+
 	var correctAnswers []models.TopicQuestion
 	initializers.Db.Where("topic_id = ?", attempt.TopicID).Find(&correctAnswers)
 
@@ -146,6 +152,7 @@ func SubmitOneAttempt(c *gin.Context) {
 		questionId := attemptAnswers[i].QuestionID
 		answer := attemptAnswers[i].Answer
 
+		// Get index of correct answer from topic Questions
 		correctAnswerIndex := slices.IndexFunc(attemptAnswers, func(c models.AttemptAnswer) bool { return c.QuestionID == questionId })
 		correctAnwer := correctAnswers[correctAnswerIndex].CorrectAnswer
 		correctScore := correctAnswers[correctAnswerIndex].QuestionScore
@@ -157,14 +164,25 @@ func SubmitOneAttempt(c *gin.Context) {
 		fmt.Println("Wrong!")
 	}
 	var submitDate = time.Now().UTC()
+
+	// Calculate Percentage
+	finalScorePercentage := finalScore / topic.TotalScore * 100
+
+	isPass := false
+	if finalScorePercentage > topic.PassPercentage {
+		isPass = true
+	}
+
 	// Update Attempt
 	initializers.Db.Model(&attempt).Updates(models.Attempt{
-		Score:       finalScore,
-		IsSubmitted: true,
-		SubmitDate:  &submitDate,
+		Score:           finalScore,
+		IsSubmitted:     true,
+		SubmitDate:      &submitDate,
+		ScorePercentage: finalScorePercentage,
+		IsPass:          isPass,
 	})
 
-	c.JSON(http.StatusOK, gin.H{"score": finalScore, "Submit Date": submitDate})
+	c.JSON(http.StatusOK, gin.H{"score": finalScore, "Submit Date": submitDate, "topic": topic})
 }
 
 func DeleteOneAttempt(c *gin.Context) {
