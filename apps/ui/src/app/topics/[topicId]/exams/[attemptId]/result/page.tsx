@@ -11,8 +11,8 @@ export default async function page({
   const attempt = await getAttemptById(params.attemptId);
   const reviewPath = `/topics/${params.topicId}/exams/${params.attemptId}/review`;
   const questionPath = `/topics/${params.topicId}/exams/${params.attemptId}/questions/1`;
-  const passOrFail = attempt.IsPass ? "Pass" : "Fail";
-  const badgeColor = passOrFail === "Pass" ? "green" : "red";
+  const passOrFail = attempt.IsPass ? "Passed" : "Failed";
+  const badgeColor = passOrFail === "Passed" ? "green" : "red";
 
   return (
     <div className="p-4 px-16">

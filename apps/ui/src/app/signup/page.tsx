@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+
 // import { useFormState } from "react-dom";
 import { signupAction } from "../actions/authActions";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function Page() {
   // const initialState = {
   //   message: "",
   // };

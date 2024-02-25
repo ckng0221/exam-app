@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { loginAction } from "../actions/authActions";
 
-export default function page() {
+export default function Page() {
   const [msgState, setMsgState] = useState<any>({ message: "", error: "" });
   const router = useRouter();
 
@@ -13,7 +13,7 @@ export default function page() {
     // Mix server action and client action
     const res = await loginAction(formData);
     setMsgState(res);
-    console.log(res);
+    // console.log(res);
 
     if (res?.message === "success") {
       const username = formData.get("email")?.toString().split("@")[0] || "";
@@ -74,7 +74,7 @@ export default function page() {
               Forgot Password?
             </a>
           </div>
-          Don't have an account?&nbsp;
+          Don&rsquo;t have an account?&nbsp;
           <Link
             className="mt-4 inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
             href="signup"

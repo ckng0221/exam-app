@@ -6,6 +6,7 @@ export interface IAttempt {
   UserID: number;
   TopicID: number;
   IsSubmitted: boolean;
+  IsPass: boolean;
 }
 
 export interface IAttemptAnswer {

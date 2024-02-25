@@ -38,12 +38,12 @@ func Signup(c *gin.Context) {
 	}
 
 	// Create the user
-	user := models.User{Name: body.Name, Email: body.Email, Password: string(hash)}
+	user := models.User{Name: body.Name, Email: body.Email, Password: string(hash), Role: "member"}
 	result := initializers.Db.Create(&user)
 
 	if result.Error != nil {
 		c.JSON(http.StatusBadGateway, gin.H{
-			"error": "Failed to creat user",
+			"error": "Failed to create user",
 		})
 		return
 	}

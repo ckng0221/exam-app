@@ -3,6 +3,7 @@ import { validateCookieToken } from "@/api/auth";
 import { Unauthorized } from "@/components/error/ErrorComp";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import Badge from "../../components/Badge";
 
 export default async function page() {
   const accessToken = cookies().get("Authorization");
@@ -65,13 +66,15 @@ async function Attempts({ user_id }: { user_id: string }) {
                 </Link>
                 &nbsp;
                 {attempt.IsSubmitted ? (
-                  <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                    Completed
-                  </span>
+                  <Badge color="green" content="Completed" />
                 ) : (
-                  <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
-                    In progress
-                  </span>
+                  <Badge color="yellow" content="In Progress" />
+                )}
+                &nbsp;
+                {attempt.IsPass ? (
+                  <Badge color="green" content="Passed" />
+                ) : (
+                  <Badge color="red" content="Failed" />
                 )}
               </li>
             );
