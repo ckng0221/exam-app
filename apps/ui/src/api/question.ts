@@ -16,11 +16,26 @@ export interface ITopicQuestion {
   TopicID: string;
 }
 
-export async function getTopics() {
-  const endpoint = `${BASE_URL}/topics/`;
-  const res = await fetch(endpoint, { cache: "no-cache" });
-  const topics = await res.json();
-  return topics;
+export async function getTopics(queryParams?: any) {
+  const endpoint = `${BASE_URL}/topics?`;
+  const res = await fetch(endpoint + new URLSearchParams(queryParams), {
+    cache: "no-store",
+  });
+  const data = await res.json();
+  return data;
+}
+
+export async function createTopics(body: ITopic[]) {
+  const payload = JSON.stringify(body);
+
+  const endpoint = `${BASE_URL}/topics`;
+  const res = await fetch(endpoint, {
+    body: payload,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    cache: "no-cache",
+  });
+  return res;
 }
 
 export async function getTopicById(topicId: string) {

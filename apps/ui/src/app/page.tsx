@@ -1,3 +1,4 @@
+import { getTopics } from "../api/question";
 import TopicCard from "../components/TopicCard";
 
 export default function Home() {
@@ -9,10 +10,7 @@ export default function Home() {
 }
 
 async function Topics() {
-  const BASE_URL = "http://localhost:8000";
-  const endpoint = `${BASE_URL}/topics`;
-  const res = await fetch(endpoint, { cache: "no-cache" });
-  const topics = await res.json();
+  const topics = await getTopics({ published: true });
 
   // console.log(topics);
 

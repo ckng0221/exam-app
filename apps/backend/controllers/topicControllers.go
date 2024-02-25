@@ -6,7 +6,9 @@ import (
 	"exam-app/backend/models"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,8 +22,19 @@ import (
 // @Success 200
 // @Router /topics [get]
 func GetAllTopics(c *gin.Context) {
+	published := c.Query("published")
+
 	var topics []models.Topic
-	initializers.Db.Find(&topics)
+	m := make(map[string]interface{})
+	if published != "" {
+		boolValue, err := strconv.ParseBool(published)
+		if err != nil {
+			log.Fatal(err)
+		}
+		m["is_published"] = boolValue
+	}
+
+	initializers.Db.Where(m).Find(&topics)
 
 	c.JSON(http.StatusOK, topics)
 }
@@ -90,26 +103,27 @@ func GetOneTopic(c *gin.Context) {
 func UpdateOneTopic(c *gin.Context) {
 	// get the id
 	id := c.Param("id")
-	var post models.Topic
-	initializers.Db.First(&post, id)
+	var topic models.Topic
+	initializers.Db.First(&topic, id)
 
-	//
-	var body struct {
-		Name           string
-		Description    string
-		PassPercentage float32
-		IsPublished    bool
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		c.AbortWithError(400, err)
+		return
 	}
-	c.Bind(&body)
+	fmt.Println(string(body))
+	var topicM map[string]interface{}
 
-	initializers.Db.Model(&post).Updates(models.Topic{
-		Name:           body.Name,
-		Description:    body.Description,
-		PassPercentage: body.PassPercentage,
-		IsPublished:    body.IsPublished,
-	})
+	err = json.Unmarshal(body, &topicM)
 
-	c.JSON(200, post)
+	if err != nil {
+		c.AbortWithError(400, err)
+		return
+	}
+
+	initializers.Db.Model(&topic).Updates(&topicM)
+
+	c.JSON(200, topic)
 }
 
 func DeleteOneTopic(c *gin.Context) {

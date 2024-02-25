@@ -10,7 +10,7 @@ type Topic struct {
 	TopicQuestions []*TopicQuestion `json:",omitempty"`
 	IsPublished    bool             `gorm:"default:false"`
 	// computed fields
-	TotalScore float32 `gorm:"-:migration" json:",omitempty"`
+	TotalScore float32 `gorm:"->; -:migration" json:",omitempty"`
 }
 
 type TopicQuestion struct {

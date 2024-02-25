@@ -1,12 +1,11 @@
 "use client";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
-import { ITopic } from "../../api/question";
 import { useRouter } from "next/navigation";
-import Modal from "../../components/Modal";
-import { useState, ReactNode } from "react";
-import { deleteTopicAction } from "../actions/topicActions";
+import { useState } from "react";
+import { ITopic } from "../../api/question";
+import Badge from "../../components/Badge";
+import DeleteTopicIconBtn from "./topic/DeleteTopicIconBtn";
 
 interface IProps {
   topics: ITopic[];
@@ -14,27 +13,6 @@ interface IProps {
 
 export function TopicTable({ topics }: IProps) {
   const router = useRouter();
-  const [currentTopicId, setCurrentTopicId] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-  const [description, setDescription] = useState<ReactNode>("");
-  function deleteTopicClick(topicId: string, topicName: string) {
-    setOpenModal(true);
-    setCurrentTopicId(topicId);
-    setDescription(() => (
-      <>
-        Are you sure to delete{" "}
-        <b>
-          Topic ID: {topicId} - {topicName}{" "}
-        </b>
-        ?
-      </>
-    ));
-  }
-  async function handleConfirmDelete() {
-    await deleteTopicAction(currentTopicId);
-    setOpenModal(false);
-    setCurrentTopicId("");
-  }
 
   return (
     <div className="relative overflow-x-auto">
@@ -43,6 +21,9 @@ export function TopicTable({ topics }: IProps) {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="py-3">
+              ID
+            </th>
+            <th scope="col" className="py-3">
               Topic Name
             </th>
             <th scope="col" className="py-3">
@@ -50,6 +31,9 @@ export function TopicTable({ topics }: IProps) {
             </th>
             <th scope="col" className="py-3">
               Passing Percentage (%)
+            </th>
+            <th scope="col" className="py-3">
+              Published
             </th>
             <th scope="col" className="py-3">
               Action
@@ -69,10 +53,23 @@ export function TopicTable({ topics }: IProps) {
                   scope="row"
                   className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
+                  {topic.ID}
+                </th>
+                <th
+                  scope="row"
+                  className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
                   {topic.Name}
                 </th>
                 <td className="py-4">{topic.Description}</td>
                 <td className="py-4">{topic.PassPercentage}</td>
+                <td className="py-4">
+                  {topic.IsPublished ? (
+                    <Badge content="True" color="green" />
+                  ) : (
+                    <Badge content="False" color="red" />
+                  )}
+                </td>
                 <td className="py-4">
                   <IconButton
                     aria-label="edit"
@@ -83,15 +80,11 @@ export function TopicTable({ topics }: IProps) {
                   >
                     <EditIcon />
                   </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    color="error"
-                    onClick={() => {
-                      deleteTopicClick(topic.ID, topic.Name);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+
+                  <DeleteTopicIconBtn
+                    topicId={topic.ID || ""}
+                    topicName={topic.Name}
+                  />
                 </td>
               </tr>
             );
@@ -99,13 +92,14 @@ export function TopicTable({ topics }: IProps) {
         </tbody>
       </table>
 
-      <Modal
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        title="Delete topic"
-        description={description}
-        confirmAction={handleConfirmDelete}
-      />
+      <button
+        onClick={() => {
+          router.push("/admin/topic/create");
+        }}
+        className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Create Topic
+      </button>
     </div>
   );
 }
