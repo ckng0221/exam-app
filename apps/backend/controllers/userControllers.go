@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"exam-app/backend/initializers"
 	"exam-app/backend/models"
+	"exam-app/backend/utils"
 	"fmt"
 	"io"
 	"net/http"
@@ -62,7 +63,7 @@ func GetAllUsers(c *gin.Context) {
 	}
 
 	var users []models.User
-	initializers.Db.Where(m).Find(&users)
+	initializers.Db.Scopes(utils.Paginate(c)).Where(m).Find(&users)
 
 	c.JSON(http.StatusOK, users)
 }

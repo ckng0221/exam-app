@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"exam-app/backend/initializers"
 	"exam-app/backend/models"
+	"exam-app/backend/utils"
 	"fmt"
 	"io"
 	"log"
@@ -34,7 +35,7 @@ func GetAllTopics(c *gin.Context) {
 		m["is_published"] = boolValue
 	}
 
-	initializers.Db.Where(m).Find(&topics)
+	initializers.Db.Scopes(utils.Paginate(c)).Where(m).Find(&topics)
 
 	c.JSON(http.StatusOK, topics)
 }
