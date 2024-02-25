@@ -8,11 +8,15 @@ export default async function NavBar() {
   const accessToken = cookies().get("Authorization");
 
   let isLoggedIn = false;
+  let isAdmin = false;
 
   if (accessToken) {
     const user = await validateCookieToken(accessToken.value);
     if (user.ID) {
       isLoggedIn = true;
+    }
+    if (user.Role === "admin") {
+      isAdmin = true;
     }
   }
 
@@ -80,7 +84,7 @@ export default async function NavBar() {
             </li>
             {isLoggedIn ? (
               <>
-                <DropDown displayName={"Account"} />
+                <DropDown displayName={"Account"} isAdmin={isAdmin} />
               </>
             ) : (
               <li>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { logoutAction } from "../app/actions/authActions";
@@ -7,12 +8,14 @@ import Modal from "./Modal";
 
 export default function LogoutBtn({ className }: { className?: string }) {
   const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
   async function handleConfirm() {
     const result = await logoutAction();
     if (result?.error) {
       toast.error("Failed to log out.");
     }
     toast.success("Logged out");
+    router.refresh();
   }
 
   return (

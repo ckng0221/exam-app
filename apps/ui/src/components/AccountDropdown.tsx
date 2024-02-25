@@ -10,7 +10,13 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DropDown({ displayName }: { displayName: string }) {
+export default function DropDown({
+  displayName,
+  isAdmin,
+}: {
+  displayName: string;
+  isAdmin: boolean;
+}) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -48,22 +54,24 @@ export default function DropDown({ displayName }: { displayName: string }) {
               )}
             </Menu.Item>
           </div>
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  href="/admin"
-                  className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
-                  )}
-                >
-                  <AdminPanelSettingsIcon />
-                  Admin Page
-                </Link>
-              )}
-            </Menu.Item>
-          </div>
+          {isAdmin && (
+            <div className="py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <Link
+                    href="/admin"
+                    className={classNames(
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      "block px-4 py-2 text-sm"
+                    )}
+                  >
+                    <AdminPanelSettingsIcon />
+                    Admin Page
+                  </Link>
+                )}
+              </Menu.Item>
+            </div>
+          )}
           <div className="py-1">
             <Menu.Item>
               {() => (

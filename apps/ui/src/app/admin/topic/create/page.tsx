@@ -1,8 +1,18 @@
 import React from "react";
 import TopicForm from "../[topicId]/TopicForm";
 import ActiveLastBreadcrumb from "../../../../components/BeadCrumb";
+import { getUserByCookie } from "../../../../utils/common";
+import {
+  Forbidden,
+  Unauthorized,
+} from "../../../../components/error/ErrorComp";
 
-export default function page() {
+export default async function page() {
+  // Admin check
+  const user = await getUserByCookie();
+  if (!user) return <Unauthorized />;
+  if (user.Role !== "admin") return <Forbidden />;
+
   const topic = {
     ID: "",
     Name: "",
