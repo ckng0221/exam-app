@@ -1,8 +1,8 @@
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { validateCookieToken } from "../api/auth";
-import { cookies } from "next/headers";
-import LogoutBtn from "./LogoutBtn";
+import DropDown from "./AccountDropdown";
 
 export default async function NavBar() {
   const accessToken = cookies().get("Authorization");
@@ -80,17 +80,7 @@ export default async function NavBar() {
             </li>
             {isLoggedIn ? (
               <>
-                <li>
-                  <Link
-                    href="/profile"
-                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                  >
-                    Profile
-                  </Link>
-                </li>
-                <li>
-                  <LogoutBtn />
-                </li>
+                <DropDown displayName={"Account"} />
               </>
             ) : (
               <li>

@@ -1,11 +1,11 @@
 "use client";
-import { Fragment, useRef, Dispatch, SetStateAction } from "react";
+import { Fragment, useRef, Dispatch, SetStateAction, ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 interface IProps {
   title: string;
-  description: string;
+  description: ReactNode;
   cancelText?: string;
   confirmText?: string;
   openModal: boolean;

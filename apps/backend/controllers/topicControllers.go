@@ -95,12 +95,18 @@ func UpdateOneTopic(c *gin.Context) {
 
 	//
 	var body struct {
-		Name string
+		Name           string
+		Description    string
+		PassPercentage float32
+		IsPublished    bool
 	}
 	c.Bind(&body)
 
 	initializers.Db.Model(&post).Updates(models.Topic{
-		Name: body.Name,
+		Name:           body.Name,
+		Description:    body.Description,
+		PassPercentage: body.PassPercentage,
+		IsPublished:    body.IsPublished,
 	})
 
 	c.JSON(200, post)
@@ -161,7 +167,7 @@ func CreateTopicQuestions(c *gin.Context) {
 	// fmt.Println(string(body))
 
 	err = json.Unmarshal(body, &topicQuestions)
-	fmt.Println(&topicQuestions)
+	// fmt.Println(&topicQuestions)
 
 	if err != nil {
 		c.AbortWithError(400, err)

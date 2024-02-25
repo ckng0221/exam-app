@@ -1,5 +1,12 @@
 const BASE_URL = "http://localhost:8000";
 
+export interface ITopic {
+  ID?: string;
+  Name: string;
+  Description: string;
+  PassPercentage: number;
+  IsPublished: boolean;
+}
 export interface ITopicQuestion {
   ID: string;
   Question: string;
@@ -9,11 +16,35 @@ export interface ITopicQuestion {
   TopicID: string;
 }
 
+export async function getTopics() {
+  const endpoint = `${BASE_URL}/topics/`;
+  const res = await fetch(endpoint, { cache: "no-cache" });
+  const topics = await res.json();
+  return topics;
+}
+
 export async function getTopicById(topicId: string) {
   const endpoint = `${BASE_URL}/topics/${topicId}`;
   const res = await fetch(endpoint, { cache: "no-cache" });
   const topic = await res.json();
   return topic;
+}
+
+export async function deleteTopicById(topicId: string) {
+  const endpoint = `${BASE_URL}/topics/${topicId}`;
+  const res = await fetch(endpoint, { method: "DELETE" });
+  return res;
+}
+
+export async function updateTopicById(topicId: string, body: ITopic) {
+  const endpoint = `${BASE_URL}/topics/${topicId}`;
+  const payload = JSON.stringify(body);
+  const res = await fetch(endpoint, {
+    method: "PATCH",
+    body: payload,
+    headers: { "Content-Type": "application/json" },
+  });
+  return res;
 }
 
 export async function getTotalQuestion(topicId: string) {
