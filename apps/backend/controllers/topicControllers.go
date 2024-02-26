@@ -12,6 +12,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // Topics
@@ -36,6 +37,7 @@ func GetAllTopics(c *gin.Context) {
 	}
 
 	initializers.Db.Scopes(utils.Paginate(c)).Where(m).Find(&topics)
+	// initializers.Db.Scopes(utils.Paginate(c)).Preload("TopicQuestions.QuestionOptions").Where(m).Find(&topics)
 
 	c.JSON(http.StatusOK, topics)
 }
@@ -89,7 +91,20 @@ func GetOneTopic(c *gin.Context) {
 	id := c.Param("id")
 
 	var topic models.Topic
-	result := initializers.Db.First(&topic, id)
+	verbose := c.Query("verbose")
+
+	isVerbose, err := strconv.ParseBool(verbose)
+	if err != nil {
+		isVerbose = false
+	}
+
+	var result *gorm.DB
+	if isVerbose {
+		result = initializers.Db.Preload("TopicQuestions.QuestionOptions").First(&topic, id)
+	} else {
+		result = initializers.Db.First(&topic, id)
+	}
+
 	if result.Error != nil {
 		fmt.Println(result.Error)
 	}
@@ -139,6 +154,7 @@ func DeleteOneTopic(c *gin.Context) {
 func GetOneTopicQuestions(c *gin.Context) {
 	id := c.Param("id")
 	questionNumber := c.Query("number")
+	options := c.Query("options")
 
 	var topicQuestions []models.TopicQuestion
 	m := make(map[string]interface{})
@@ -147,7 +163,18 @@ func GetOneTopicQuestions(c *gin.Context) {
 	if questionNumber != "" {
 		m["question_number"] = questionNumber
 	}
-	initializers.Db.Where(m).Find(&topicQuestions).Order("QuestionNumber")
+
+	getOptions, err := strconv.ParseBool(options)
+
+	if err != nil {
+		getOptions = false
+	}
+
+	if getOptions {
+		initializers.Db.Preload("QuestionOptions").Where(m).Find(&topicQuestions).Order("QuestionNumber")
+	} else {
+		initializers.Db.Where(m).Find(&topicQuestions).Order("QuestionNumber")
+	}
 	c.JSON(http.StatusOK, topicQuestions)
 }
 

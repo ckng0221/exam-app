@@ -1,19 +1,11 @@
 "use client";
 import { createOrUpdateAnswer } from "@/api/attempt";
+import { revalidateLayout } from "@/app/actions/revalidateActions";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
 import { useState } from "react";
-import {
-  revalidateLayout,
-  revalidatePage,
-} from "@/app/actions/revalidateActions";
+import { ITopicQuestionOption } from "@/api/question";
 // import { revalidateLayout } from "@/app/actions/revalidateActions";
-
-interface IOption {
-  ID: string;
-  OptionCode: string;
-  Description: string;
-}
 
 export default function Options({
   isSubmitted,
@@ -27,7 +19,7 @@ export default function Options({
   isSubmitted: boolean;
   attemptId: string;
   questionId: string;
-  options: IOption[];
+  options: ITopicQuestionOption[];
   existingAnswer: string;
   radioDisabled: boolean;
   correctAnswer?: string;

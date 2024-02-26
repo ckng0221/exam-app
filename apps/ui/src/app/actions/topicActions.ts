@@ -56,3 +56,7 @@ export async function createTopicAction(formData: FormData) {
     return { message: "error" };
   }
 }
+
+export async function updateAdminQuestions(formData: FormData) {
+  console.log(formData);
+}

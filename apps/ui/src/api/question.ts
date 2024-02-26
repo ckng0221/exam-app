@@ -14,6 +14,13 @@ export interface ITopicQuestion {
   CorrectAnswer: string;
   QuestionScore: number;
   TopicID: string;
+  QuestionOptions?: ITopicQuestionOption[];
+}
+
+export interface ITopicQuestionOption {
+  ID: string;
+  OptionCode: string;
+  Description: string;
 }
 
 export async function getTopics(queryParams?: any) {
@@ -38,9 +45,11 @@ export async function createTopics(body: ITopic[]) {
   return res;
 }
 
-export async function getTopicById(topicId: string) {
-  const endpoint = `${BASE_URL}/topics/${topicId}`;
-  const res = await fetch(endpoint, { cache: "no-cache" });
+export async function getTopicById(topicId: string, queryParams?: any) {
+  const endpoint = `${BASE_URL}/topics/${topicId}?`;
+  const res = await fetch(endpoint + new URLSearchParams(queryParams), {
+    cache: "no-cache",
+  });
   const topic = await res.json();
   return topic;
 }
@@ -69,9 +78,14 @@ export async function getTotalQuestion(topicId: string) {
   return totalQuestions;
 }
 
-export async function getAllQuestionsByTopic(topicId: string) {
-  const endpoint = `${BASE_URL}/topics/${topicId}/questions`;
-  const res = await fetch(endpoint, { cache: "no-cache" });
+export async function getAllQuestionsByTopic(
+  topicId: string,
+  queryParams?: any
+) {
+  const endpoint = `${BASE_URL}/topics/${topicId}/questions?`;
+  const res = await fetch(endpoint + new URLSearchParams(queryParams), {
+    cache: "no-cache",
+  });
   const questions = await res.json();
   return questions;
 }
