@@ -141,3 +141,31 @@ export async function getQuestionDetailsSafe(
 
   return { questionId, question, questionDetail };
 }
+
+export async function updateQuestionById(
+  questionId: string,
+  body: Partial<ITopicQuestion>
+) {
+  const endpoint = `${BASE_URL}/topic-questions/${questionId}`;
+  const payload = JSON.stringify(body);
+  const res = await fetch(endpoint, {
+    method: "PATCH",
+    body: payload,
+    headers: { "Content-Type": "application/json" },
+  });
+  return res;
+}
+
+export async function updateOptionById(
+  optionId: string,
+  body: Partial<ITopicQuestionOption>
+) {
+  const endpoint = `${BASE_URL}/question-options/${optionId}`;
+  const payload = JSON.stringify(body);
+  const res = await fetch(endpoint, {
+    method: "PATCH",
+    body: payload,
+    headers: { "Content-Type": "application/json" },
+  });
+  return res;
+}

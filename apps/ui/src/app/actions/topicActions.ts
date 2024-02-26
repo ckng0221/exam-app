@@ -3,6 +3,8 @@
 import {
   createTopics,
   deleteTopicById,
+  updateOptionById,
+  updateQuestionById,
   updateTopicById,
 } from "../../api/question";
 import { revalidatePage } from "./revalidateActions";
@@ -57,6 +59,35 @@ export async function createTopicAction(formData: FormData) {
   }
 }
 
-export async function updateAdminQuestions(formData: FormData) {
+export async function updateAdminQuestionsAction(formData: FormData) {
+  const questionId = formData.get("question-id")?.toString();
+  const question = formData.get("question-input")?.toString();
+  const correctAnswer = formData.get("correct-answer")?.toString();
+  const questionScore = Number(formData.get("question-score")?.toString());
+
   console.log(formData);
+
+  const questionPayload = {
+    Question: question,
+    CorrectAnswer: correctAnswer,
+    QuestionScore: questionScore,
+  };
+  if (!questionId) return { message: "Question ID not found" };
+  const data = await updateQuestionById(questionId, questionPayload);
+
+  for (const [key, value] of formData.entries()) {
+    if (String(key).startsWith("optionid")) {
+      const optionId = String(key).split("optionid-")[1];
+      const payload = {
+        Description: value.toString(),
+      };
+      await updateOptionById(optionId, payload);
+    }
+  }
+
+  if (data.status === 200) {
+    return { message: "success" };
+  } else {
+    return { message: "error" };
+  }
 }
