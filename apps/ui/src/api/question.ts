@@ -171,6 +171,14 @@ export async function updateOptionById(
   return res;
 }
 
+export async function deleteOptionById(optionId: string) {
+  const endpoint = `${BASE_URL}/question-options/${optionId}`;
+  const res = await fetch(endpoint, {
+    method: "DELETE",
+  });
+  return res;
+}
+
 export async function createOptions(body: Partial<ITopicQuestionOption[]>) {
   const endpoint = `${BASE_URL}/question-options`;
   const payload = JSON.stringify(body);

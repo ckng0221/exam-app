@@ -3,6 +3,7 @@
 import {
   createOptions,
   createTopics,
+  deleteOptionById,
   deleteTopicById,
   updateOptionById,
   updateQuestionById,
@@ -67,7 +68,7 @@ export async function updateAdminQuestionsAction(formData: FormData) {
   const correctAnswer = formData.get("correct-answer")?.toString();
   const questionScore = Number(formData.get("question-score")?.toString());
 
-  // console.log(formData);
+  console.log(formData);
 
   const questionPayload = {
     QuestionNumber: questionNumber,
@@ -80,6 +81,16 @@ export async function updateAdminQuestionsAction(formData: FormData) {
 
   let optionData = Array.from(formData.entries());
   optionData = optionData.filter((x) => String(x[0]).startsWith("optionid"));
+
+  // delete options
+  const removedOptions = JSON.parse(
+    formData.get("removed-options")?.toString() || ""
+  );
+  removedOptions.map(async (option: { id: string }) => {
+    if (!option.id) return;
+    await deleteOptionById(option.id);
+  });
+
   // Update options
   const rowArray = optionData.map((option) =>
     Number(option[0].split("-rowidx-")[1])
@@ -92,7 +103,7 @@ export async function updateAdminQuestionsAction(formData: FormData) {
     );
 
     const key = optionRowData[0];
-    const value = optionRowData[1];
+    // const value = optionRowData[1];
     const optionId = String(key).split("-")[1];
 
     const optionCode = optionRowData.find((x) =>
@@ -112,31 +123,18 @@ export async function updateAdminQuestionsAction(formData: FormData) {
       payload["Description"] = description;
     }
 
-    if (optionId !== "new") {
+    // ID starts with 'new' is new uncreated option
+    if (!optionId.startsWith("new")) {
       // update option
       await updateOptionById(optionId, payload);
     } else {
       // create new option
-      await createOptions([payload]);
+      // console.log(optionId);
+      if (optionCode || description) {
+        await createOptions([payload]);
+      }
     }
   }
-
-  // for (const [key, value] of formData.entries()) {
-  //   if (String(key).startsWith("optionid")) {
-  //     const row = String(key).split("-row-idx-");
-
-  //     const optionId = String(key).split("-")[1];
-  //     const field = String(key).split("-")[2];
-  //     let payload: any = {};
-  //     if (field === "optioncode") {
-  //       payload["OptionCode"] = value.toString();
-  //     } else if (field === "description") {
-  //       payload["Description"] = value.toString();
-  //     }
-
-  //     // await updateOptionById(optionId, payload);
-  //   }
-  // }
 
   await revalidateLayout();
 

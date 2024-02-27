@@ -367,7 +367,8 @@ func UpdateOneQuestionOption(c *gin.Context) {
 func DeleteOneQuestionOption(c *gin.Context) {
 	id := c.Param("id")
 
-	initializers.Db.Delete(&models.QuestionOption{}, id)
+	// Hard delete
+	initializers.Db.Unscoped().Delete(&models.QuestionOption{}, id)
 
 	// response
 	c.Status(202)

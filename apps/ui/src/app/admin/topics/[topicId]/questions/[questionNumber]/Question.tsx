@@ -1,6 +1,6 @@
 "use client";
-
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
@@ -21,12 +21,16 @@ export default function Question({
   isNew?: boolean;
 }) {
   const [question, setQuestion] = useState(defaultQuestion);
+  const [removedOptions, setRemovedOptions] = useState<any>([]);
 
   const textAreaClassName = `block p-2.5 ${
     isNew ? "w-full" : "w-6/12"
   } text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`;
 
   async function handleUpdate(formData: FormData) {
+    // add removed options
+    formData.append("removed-options", JSON.stringify(removedOptions));
+
     const res = await updateAdminQuestionsAction(formData);
     if (res.message === "success") {
       toast.success("Updated question");
@@ -36,21 +40,34 @@ export default function Question({
   }
 
   function addNewOption() {
+    const newIdx = question.QuestionOptions.length;
+
     const questionOptions = [
       ...question.QuestionOptions,
       {
-        ID: "new",
+        ID: `new${newIdx}`,
         Description: "",
         OptionCode: "",
         QuestionID: question.ID,
+        rowIdx: newIdx,
       },
     ];
     setQuestion({ ...question, QuestionOptions: questionOptions });
   }
 
+  function handleRemove(ID: string) {
+    let questionOptions;
+    questionOptions = question.QuestionOptions.filter((x) => x.ID !== ID);
+
+    setQuestion({ ...question, QuestionOptions: questionOptions });
+    if (!String(ID).startsWith("new")) {
+      setRemovedOptions((prev: any) => [...prev, { id: ID }]);
+    }
+  }
+
   return (
     <div className="mb-4">
-      <form action={handleUpdate}>
+      <form id="question-form" action={handleUpdate}>
         <input
           type="text"
           value={question.ID}
@@ -69,7 +86,7 @@ export default function Question({
             type="number"
             id="question-number"
             name="question-number"
-            className={` ${isNew ? "w-full" : "w-6/12"} mb-4 ${inputClassName}`}
+            className={` ${isNew ? "w-full" : "w-1/12"} mb-4 ${inputClassName}`}
             defaultValue={question.QuestionNumber}
           />
           <label
@@ -111,6 +128,7 @@ export default function Question({
         </IconButton>
         <QuestionOptions
           question={question}
+          handleRemove={handleRemove}
           options={question?.QuestionOptions || []}
         />
 
@@ -130,30 +148,36 @@ export default function Question({
 function QuestionOptions({
   question,
   options,
+  handleRemove,
 }: {
   question: any;
   options: ITopicQuestionOption[] | any[];
+  handleRemove: (id: string) => void;
 }) {
   return options?.map((option, idx) => (
     <div key={option.ID} className="flex items-center mb-4">
-      <input
-        id={`${question.ID}-${option.OptionCode}`}
-        type="radio"
-        title={option.Description}
-        value={option.OptionCode}
-        name={`correct-answer`}
-        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:bg-gray-200"
-        defaultChecked={option.OptionCode === question.CorrectAnswer}
-      />
+      {/* Radio Button */}
       <label
-        htmlFor={option.OptionCode}
+        htmlFor={`${question.ID}-${option.OptionCode}-${idx}`}
         className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-      ></label>
-      <label
-        htmlFor={option.OptionCode}
-        className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-      ></label>
+      >
+        <input
+          id={`${question.ID}-${option.OptionCode}-${idx}`}
+          type="radio"
+          title={option.Description}
+          value={option.OptionCode}
+          name={`correct-answer`}
+          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:bg-gray-200"
+          defaultChecked={option.OptionCode === question.CorrectAnswer}
+        />
+      </label>
+
       <div className="flex content-center gap-2">
+        {/* OptionCode */}
+        <label
+          htmlFor={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
+          className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+        ></label>
         <input
           name={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
           type="text"
@@ -161,6 +185,8 @@ function QuestionOptions({
           id={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
           className={`w-2/12 ${inputClassName}`}
         />
+
+        {/* Description */}
         <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
           <input
             name={`optionid-${option.ID}-description-rowidx-${idx}`}
@@ -170,6 +196,13 @@ function QuestionOptions({
             className={inputClassName}
           />
         </label>
+        <IconButton
+          aria-label="delete"
+          color="error"
+          onClick={() => handleRemove(option.ID)}
+        >
+          <DeleteIcon />
+        </IconButton>
       </div>
     </div>
   ));
