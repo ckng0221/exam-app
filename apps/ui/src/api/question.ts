@@ -17,6 +17,14 @@ export interface ITopicQuestion {
   QuestionOptions: ITopicQuestionOption[];
 }
 
+export interface ITopicQuestionCreate {
+  Question: string;
+  QuestionNumber: number;
+  CorrectAnswer: string;
+  QuestionScore: number;
+  TopicID: number;
+}
+
 export interface ITopicQuestionOption {
   ID: string;
   OptionCode: string;
@@ -67,6 +75,19 @@ export async function updateTopicById(topicId: string, body: ITopic) {
     method: "PATCH",
     body: payload,
     headers: { "Content-Type": "application/json" },
+  });
+  return res;
+}
+
+export async function createQuestions(body: ITopicQuestionCreate[]) {
+  const payload = JSON.stringify(body);
+
+  const endpoint = `${BASE_URL}/topic-questions`;
+  const res = await fetch(endpoint, {
+    body: payload,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    cache: "no-cache",
   });
   return res;
 }

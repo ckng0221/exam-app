@@ -28,7 +28,7 @@ export default async function AdminQuestionPage({
         <div className="mb-4">
           <ActiveLastBreadcrumb breadcrumbs={breadcrumbs} />
         </div>
-        <Question question={questionDetail} />
+        <Question topicId={params.topicId} defaultQuestion={questionDetail} />
       </div>
     </>
   );

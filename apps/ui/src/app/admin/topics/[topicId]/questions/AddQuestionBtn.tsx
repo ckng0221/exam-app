@@ -3,16 +3,22 @@ import { useState } from "react";
 import Modal from "../../../../../components/Modal";
 import Question from "./[questionNumber]/Question";
 
-export default function AddQuestionBtn() {
+export default function AddQuestionBtn({
+  topicId,
+  defaultQuestionNumber,
+}: {
+  topicId: string;
+  defaultQuestionNumber: number;
+}) {
   const [openModal, setOpenModal] = useState(false);
   const question = {
-    ID: "",
+    ID: "new",
     Question: "",
-    QuestionNumber: 0,
+    QuestionNumber: defaultQuestionNumber,
     CorrectAnswer: "",
     QuestionScore: 1,
-    TopicID: "",
-    QuestionOptions: [{ ID: "", Description: "", OptionCode: "" }],
+    TopicID: topicId,
+    QuestionOptions: [{ ID: "new0", Description: "", OptionCode: "" }],
   };
 
   return (
@@ -28,7 +34,16 @@ export default function AddQuestionBtn() {
         openModal={openModal}
         setOpenModal={setOpenModal}
         title="New Question"
-        description={<Question question={question} isNew />}
+        confirmText="Create"
+        hideConfirm
+        description={
+          <Question
+            topicId={topicId}
+            defaultQuestion={question}
+            isNew
+            setOpenModal={setOpenModal}
+          />
+        }
       />
     </div>
   );

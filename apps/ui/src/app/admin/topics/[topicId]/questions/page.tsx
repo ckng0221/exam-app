@@ -44,7 +44,10 @@ function QuestionLinks({
           />
         );
       })}
-      <AddQuestionBtn />
+      <AddQuestionBtn
+        topicId={topicId}
+        defaultQuestionNumber={questions.length + 1}
+      />
     </>
   );
 }

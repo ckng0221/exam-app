@@ -2,26 +2,35 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-hot-toast";
 import {
   ITopicQuestion,
   ITopicQuestionOption,
 } from "../../../../../../api/question";
-import { updateAdminQuestionsAction } from "../../../../../actions/topicActions";
+import {
+  createAdminQuestionAction,
+  updateAdminQuestionAction,
+} from "../../../../../actions/topicActions";
+import { useRouter } from "next/navigation";
 
 const inputClassName =
-  "disabled:bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+  "disabled:bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
 
 export default function Question({
-  question: defaultQuestion,
+  topicId,
+  defaultQuestion,
   isNew = false,
+  setOpenModal,
 }: {
-  question: ITopicQuestion;
+  topicId?: string;
+  defaultQuestion: ITopicQuestion;
   isNew?: boolean;
+  setOpenModal?: Dispatch<SetStateAction<boolean>>;
 }) {
   const [question, setQuestion] = useState(defaultQuestion);
   const [removedOptions, setRemovedOptions] = useState<any>([]);
+  const router = useRouter();
 
   const textAreaClassName = `block p-2.5 ${
     isNew ? "w-full" : "w-6/12"
@@ -31,7 +40,7 @@ export default function Question({
     // add removed options
     formData.append("removed-options", JSON.stringify(removedOptions));
 
-    const res = await updateAdminQuestionsAction(formData);
+    const res = await updateAdminQuestionAction(formData);
     if (res.message === "success") {
       toast.success("Updated question");
     } else {
@@ -39,11 +48,24 @@ export default function Question({
     }
   }
 
+  async function handleCreate(formData: FormData) {
+    const res = await createAdminQuestionAction(formData);
+    if (res.message === "success") {
+      toast.success("Created question");
+      if (setOpenModal) {
+        setOpenModal(false);
+      }
+      router.push(`/admin/topics/${topicId}/questions`);
+    } else {
+      toast.error(res.message);
+    }
+  }
+
   function addNewOption() {
-    const newIdx = question.QuestionOptions.length;
+    const newIdx = question?.QuestionOptions?.length;
 
     const questionOptions = [
-      ...question.QuestionOptions,
+      ...(question?.QuestionOptions || []),
       {
         ID: `new${newIdx}`,
         Description: "",
@@ -67,7 +89,7 @@ export default function Question({
 
   return (
     <div className="mb-4">
-      <form id="question-form" action={handleUpdate}>
+      <form id="question-form" action={isNew ? handleCreate : handleUpdate}>
         <input
           type="text"
           value={question.ID}
@@ -75,6 +97,7 @@ export default function Question({
           hidden
           readOnly
         />
+        <input type="text" value={topicId} name="topic-id" hidden readOnly />
         <div className="mb-4">
           <label
             htmlFor="question-number"
@@ -131,15 +154,12 @@ export default function Question({
           handleRemove={handleRemove}
           options={question?.QuestionOptions || []}
         />
-
-        {!isNew && (
-          <button
-            type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          >
-            Update
-          </button>
-        )}
+        <button
+          type="submit"
+          className="mt-8 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          {isNew ? "Create" : "Update"}
+        </button>
       </form>
     </div>
   );
@@ -158,19 +178,18 @@ function QuestionOptions({
     <div key={option.ID} className="flex items-center mb-4">
       {/* Radio Button */}
       <label
-        htmlFor={`${question.ID}-${option.OptionCode}-${idx}`}
+        // htmlFor={`${question.ID}-${option.OptionCode}-${idx}`}
         className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-      >
-        <input
-          id={`${question.ID}-${option.OptionCode}-${idx}`}
-          type="radio"
-          title={option.Description}
-          value={option.OptionCode}
-          name={`correct-answer`}
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:bg-gray-200"
-          defaultChecked={option.OptionCode === question.CorrectAnswer}
-        />
-      </label>
+      ></label>
+      <input
+        // id={`${question.ID}-${option.OptionCode}-${idx}`}
+        type="radio"
+        title={option.Description}
+        value={option.OptionCode}
+        name={`correct-answer`}
+        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:bg-gray-200"
+        defaultChecked={option.OptionCode === question.CorrectAnswer}
+      />
 
       <div className="flex content-center gap-2">
         {/* OptionCode */}
@@ -181,6 +200,7 @@ function QuestionOptions({
         <input
           name={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
           type="text"
+          maxLength={1}
           defaultValue={option.OptionCode}
           id={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
           className={`w-2/12 ${inputClassName}`}
