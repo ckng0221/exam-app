@@ -10,11 +10,11 @@ export interface ITopic {
 export interface ITopicQuestion {
   ID: string;
   Question: string;
-  QuestionNumber: string;
+  QuestionNumber: number;
   CorrectAnswer: string;
   QuestionScore: number;
   TopicID: string;
-  QuestionOptions?: ITopicQuestionOption[];
+  QuestionOptions: ITopicQuestionOption[];
 }
 
 export interface ITopicQuestionOption {
@@ -105,7 +105,8 @@ export async function getQuestionDetails(
   );
   const questions = await res.json();
   const question = questions[0];
-  const questionId = question.ID;
+
+  const questionId = question?.ID;
 
   const questionDetailsEndpoint = `${BASE_URL}/topic-questions/${questionId}`;
   const questRes = await fetch(questionDetailsEndpoint, {
@@ -164,6 +165,17 @@ export async function updateOptionById(
   const payload = JSON.stringify(body);
   const res = await fetch(endpoint, {
     method: "PATCH",
+    body: payload,
+    headers: { "Content-Type": "application/json" },
+  });
+  return res;
+}
+
+export async function createOptions(body: Partial<ITopicQuestionOption[]>) {
+  const endpoint = `${BASE_URL}/question-options`;
+  const payload = JSON.stringify(body);
+  const res = await fetch(endpoint, {
+    method: "POST",
     body: payload,
     headers: { "Content-Type": "application/json" },
   });

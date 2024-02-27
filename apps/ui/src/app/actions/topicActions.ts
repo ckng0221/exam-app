@@ -1,13 +1,14 @@
 "use server";
 
 import {
+  createOptions,
   createTopics,
   deleteTopicById,
   updateOptionById,
   updateQuestionById,
   updateTopicById,
 } from "../../api/question";
-import { revalidatePage } from "./revalidateActions";
+import { revalidateLayout, revalidatePage } from "./revalidateActions";
 
 export async function deleteTopicAction(topicId: string) {
   if (!topicId) return;
@@ -61,13 +62,15 @@ export async function createTopicAction(formData: FormData) {
 
 export async function updateAdminQuestionsAction(formData: FormData) {
   const questionId = formData.get("question-id")?.toString();
+  const questionNumber = Number(formData.get("question-number")?.toString());
   const question = formData.get("question-input")?.toString();
   const correctAnswer = formData.get("correct-answer")?.toString();
   const questionScore = Number(formData.get("question-score")?.toString());
 
-  console.log(formData);
+  // console.log(formData);
 
   const questionPayload = {
+    QuestionNumber: questionNumber,
     Question: question,
     CorrectAnswer: correctAnswer,
     QuestionScore: questionScore,
@@ -75,15 +78,67 @@ export async function updateAdminQuestionsAction(formData: FormData) {
   if (!questionId) return { message: "Question ID not found" };
   const data = await updateQuestionById(questionId, questionPayload);
 
-  for (const [key, value] of formData.entries()) {
-    if (String(key).startsWith("optionid")) {
-      const optionId = String(key).split("optionid-")[1];
-      const payload = {
-        Description: value.toString(),
-      };
+  let optionData = Array.from(formData.entries());
+  optionData = optionData.filter((x) => String(x[0]).startsWith("optionid"));
+  // Update options
+  const rowArray = optionData.map((option) =>
+    Number(option[0].split("-rowidx-")[1])
+  );
+  const totalRows = Math.max(...rowArray);
+
+  for (let i = 0; i < totalRows + 1; i++) {
+    const optionRowData = optionData.filter((x) =>
+      String(x[0]).endsWith(`-rowidx-${i}`)
+    );
+
+    const key = optionRowData[0];
+    const value = optionRowData[1];
+    const optionId = String(key).split("-")[1];
+
+    const optionCode = optionRowData.find((x) =>
+      String(x[0]).includes("optioncode")
+    )?.[1];
+    const description = optionRowData.find((x) =>
+      String(x[0]).includes("description")
+    )?.[1];
+
+    let payload: any = {
+      QuestionID: Number(questionId),
+    };
+    if (optionCode) {
+      payload["OptionCode"] = optionCode;
+    }
+    if (description) {
+      payload["Description"] = description;
+    }
+
+    if (optionId !== "new") {
+      // update option
       await updateOptionById(optionId, payload);
+    } else {
+      // create new option
+      await createOptions([payload]);
     }
   }
+
+  // for (const [key, value] of formData.entries()) {
+  //   if (String(key).startsWith("optionid")) {
+  //     const row = String(key).split("-row-idx-");
+
+  //     const optionId = String(key).split("-")[1];
+  //     const field = String(key).split("-")[2];
+  //     let payload: any = {};
+  //     if (field === "optioncode") {
+  //       payload["OptionCode"] = value.toString();
+  //     } else if (field === "description") {
+  //       payload["Description"] = value.toString();
+  //     }
+
+  //     // await updateOptionById(optionId, payload);
+  //   }
+  // }
+
+  await revalidateLayout();
 
   if (data.status === 200) {
     return { message: "success" };

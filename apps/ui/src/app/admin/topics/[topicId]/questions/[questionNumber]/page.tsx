@@ -21,14 +21,15 @@ export default async function AdminQuestionPage({
     params.topicId,
     params.questionNumber
   );
-  // console.log(questionDetail);
 
   return (
-    <div className="p-4">
-      <div className="mb-4">
-        <ActiveLastBreadcrumb breadcrumbs={breadcrumbs} />
+    <>
+      <div className="p-4">
+        <div className="mb-4">
+          <ActiveLastBreadcrumb breadcrumbs={breadcrumbs} />
+        </div>
+        <Question question={questionDetail} />
       </div>
-      <Question question={questionDetail} />
-    </div>
+    </>
   );
 }

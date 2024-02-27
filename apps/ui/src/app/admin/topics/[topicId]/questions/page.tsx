@@ -1,8 +1,8 @@
 import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/question";
-import ActiveLastBreadcrumb from "../../../../../components/BeadCrumb";
-import { updateAdminQuestionsAction } from "../../../../actions/topicActions";
-import NextLink from "next/link";
 import { Link } from "@mui/material";
+import NextLink from "next/link";
+import ActiveLastBreadcrumb from "../../../../../components/BeadCrumb";
+import AddQuestionBtn from "./AddQuestionBtn";
 
 async function QuestionsAdminPage({ params }: { params: { topicId: string } }) {
   const breadcrumbs = [
@@ -19,14 +19,14 @@ async function QuestionsAdminPage({ params }: { params: { topicId: string } }) {
       <div className="mb-4">
         <ActiveLastBreadcrumb breadcrumbs={breadcrumbs} />
       </div>
-      <Questions topicId={params.topicId} questions={questions} />
+      <QuestionLinks topicId={params.topicId} questions={questions} />
     </div>
   );
 }
 
 export default QuestionsAdminPage;
 
-function Questions({
+function QuestionLinks({
   topicId,
   questions,
 }: {
@@ -34,23 +34,22 @@ function Questions({
   questions: ITopicQuestion[];
 }) {
   return (
-    <form action={updateAdminQuestionsAction}>
+    <>
       {questions.map((question) => {
         return (
-          <Question topicId={topicId} key={question.ID} question={question} />
+          <QuestionLink
+            topicId={topicId}
+            key={question.ID}
+            question={question}
+          />
         );
       })}
-      <button
-        type="button"
-        className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"
-      >
-        Add Question
-      </button>
-    </form>
+      <AddQuestionBtn />
+    </>
   );
 }
 
-function Question({
+function QuestionLink({
   topicId,
   question,
 }: {
