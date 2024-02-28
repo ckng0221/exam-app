@@ -1,4 +1,4 @@
-import { getTopicById } from "../../../../api/question";
+import { getTopicById } from "../../../../api/topic";
 import TopicForm from "./TopicForm";
 import ActiveLastBreadcrumb from "../../../../components/BeadCrumb";
 import { getUserByCookie } from "../../../../utils/common";

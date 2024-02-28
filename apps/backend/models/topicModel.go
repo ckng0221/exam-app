@@ -1,6 +1,12 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"database/sql"
+
+	"gorm.io/gorm"
+)
+
+type DeletedAt sql.NullTime
 
 type Topic struct {
 	gorm.Model
@@ -14,6 +20,8 @@ type Topic struct {
 }
 
 type TopicQuestion struct {
+	gorm.Model
+
 	ID            uint `gorm:"primarykey"`
 	Question      string
 	CorrectAnswer string `gorm:"type:varchar(10)"`

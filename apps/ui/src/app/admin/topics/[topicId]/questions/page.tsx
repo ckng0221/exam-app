@@ -1,4 +1,4 @@
-import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/question";
+import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/topic";
 import { Link } from "@mui/material";
 import NextLink from "next/link";
 import ActiveLastBreadcrumb from "../../../../../components/BeadCrumb";

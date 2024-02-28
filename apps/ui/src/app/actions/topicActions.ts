@@ -5,17 +5,27 @@ import {
   createQuestions,
   createTopics,
   deleteOptionById,
+  deleteQuestionById,
   deleteTopicById,
   updateOptionById,
   updateQuestionById,
   updateTopicById,
-} from "../../api/question";
+} from "../../api/topic";
 import { revalidateLayout, revalidatePage } from "./revalidateActions";
 
 export async function deleteTopicAction(topicId: string) {
   if (!topicId) return;
   await deleteTopicById(topicId);
   revalidatePage("/admin");
+}
+
+export async function deleteQuestionAction(
+  topicId: string,
+  questionId: string
+) {
+  if (!questionId) return;
+  await deleteQuestionById(questionId);
+  revalidatePage(`/admin/topics/${topicId}/questions`);
 }
 
 function getTopicFormInputs(formData: FormData) {
@@ -68,7 +78,7 @@ export async function updateAdminQuestionAction(formData: FormData) {
   const correctAnswer = formData.get("correct-answer")?.toString();
   const questionScore = Number(formData.get("question-score")?.toString());
 
-  console.log(formData);
+  // console.log(formData);
 
   const questionPayload = {
     Question: question,

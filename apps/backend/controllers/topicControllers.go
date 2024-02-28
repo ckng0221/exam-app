@@ -280,6 +280,7 @@ func DeleteOneTopicQuestion(c *gin.Context) {
 	id := c.Param("id")
 
 	initializers.Db.Delete(&models.TopicQuestion{}, id)
+	fmt.Println("lalal")
 
 	// response
 	c.Status(202)

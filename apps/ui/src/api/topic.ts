@@ -171,6 +171,12 @@ export async function getQuestionDetailsSafe(
   return { questionId, question, questionDetail };
 }
 
+export async function deleteQuestionById(questionId: string) {
+  const endpoint = `${BASE_URL}/topic-questions/${questionId}`;
+  const res = await fetch(endpoint, { method: "DELETE" });
+  return res;
+}
+
 export async function updateQuestionById(
   questionId: string,
   body: Partial<ITopicQuestion>

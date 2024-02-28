@@ -3,7 +3,7 @@ import {
   getQuestionDetails,
   getQuestionDetailsSafe,
   getTotalQuestion,
-} from "@/api/question";
+} from "@/api/topic";
 import AnswerOption from "./AnswerOption";
 import Link from "next/link";
 

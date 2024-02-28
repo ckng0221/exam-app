@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ITopic } from "../../api/question";
+import { ITopic } from "../../api/topic";
 import Badge from "../../components/Badge";
 import DeleteTopicIconBtn from "./topics/DeleteTopicIconBtn";
 

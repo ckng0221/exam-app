@@ -3,7 +3,7 @@ import {
   getAttemptAnswers,
   getAttemptById,
 } from "@/api/attempt";
-import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/question";
+import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/topic";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";

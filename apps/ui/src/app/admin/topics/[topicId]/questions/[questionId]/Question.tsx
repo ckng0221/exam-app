@@ -1,18 +1,19 @@
 "use client";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-hot-toast";
 import {
   ITopicQuestion,
   ITopicQuestionOption,
-} from "../../../../../../api/question";
+} from "../../../../../../api/topic";
 import {
   createAdminQuestionAction,
   updateAdminQuestionAction,
 } from "../../../../../actions/topicActions";
 import { useRouter } from "next/navigation";
+import DeleteQuestionIconBtn from "../DeleteQuestionIconBtn";
 
 const inputClassName =
   "disabled:bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
@@ -36,7 +37,7 @@ export default function Question({
 
   const textAreaClassName = `block p-2.5 ${
     isNew ? "w-full" : "w-6/12"
-  } text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`;
+  } text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`;
 
   async function handleUpdate(formData: FormData) {
     // add removed options
@@ -180,6 +181,17 @@ export default function Question({
         >
           {isNew ? "Create" : "Update"}
         </button>
+        {!isNew && (
+          <>
+            <Tooltip title="Delete Question">
+              <DeleteQuestionIconBtn
+                topicId={topicId || ""}
+                questionId={question.ID}
+                question={question.Question}
+              />
+            </Tooltip>
+          </>
+        )}
       </form>
     </div>
   );

@@ -1,4 +1,4 @@
-import { getQuestionById, getQuestionDetails } from "@/api/question";
+import { getQuestionById } from "@/api/topic";
 import ActiveLastBreadcrumb from "@/components/BeadCrumb";
 import Question from "./Question";
 

@@ -4,7 +4,7 @@ import { revalidateLayout } from "@/app/actions/revalidateActions";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
 import { useState } from "react";
-import { ITopicQuestionOption } from "@/api/question";
+import { ITopicQuestionOption } from "@/api/topic";
 // import { revalidateLayout } from "@/app/actions/revalidateActions";
 
 export default function Options({

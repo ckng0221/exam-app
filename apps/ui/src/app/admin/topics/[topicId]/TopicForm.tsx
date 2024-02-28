@@ -1,5 +1,5 @@
 "use client";
-import { ITopic } from "@/api/question";
+import { ITopic } from "@/api/topic";
 import {
   createTopicAction,
   updateTopicAction,
