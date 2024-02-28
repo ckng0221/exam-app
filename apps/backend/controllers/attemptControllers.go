@@ -55,14 +55,32 @@ type CreateAttempt struct {
 func CreateAttempts(c *gin.Context) {
 	var attempts []models.Attempt
 
+	user, _ := c.Get("user")
+	userId := user.(models.User).ID
+
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		c.AbortWithError(400, err)
 		return
 	}
-	fmt.Println(string(body))
+	// fmt.Println(string(body))
 
-	err = json.Unmarshal(body, &attempts)
+	var attemptsInterface []map[string]interface{}
+
+	// Custom modification
+	err = json.Unmarshal(body, &attemptsInterface)
+	if err != nil {
+		c.AbortWithError(400, err)
+		return
+	}
+	for _, attempt := range attemptsInterface {
+		// Add user ID based on cookie
+		attempt["UserID"] = userId
+	}
+	// fmt.Println(attemptsInterface)
+	newAttempts, _ := json.Marshal(attemptsInterface)
+
+	err = json.Unmarshal(newAttempts, &attempts)
 
 	if err != nil {
 		c.AbortWithError(400, err)
@@ -71,6 +89,7 @@ func CreateAttempts(c *gin.Context) {
 
 	result := initializers.Db.Create(&attempts)
 	if result.Error != nil {
+		fmt.Println(result.Error)
 		c.AbortWithStatus(500)
 		return
 	}

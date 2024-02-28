@@ -1,7 +1,7 @@
-const BASE_URL = "http://localhost:8000";
+const BACKEND_HOST = process.env.BACKEND_HOST || "http://localhost:8000";
 
 export async function getUsers({ email }: { email?: string }) {
-  const endpoint = `${BASE_URL}/users?`;
+  const endpoint = `${BACKEND_HOST}/users?`;
 
   const queryParam: any = {};
   if (email) queryParam["email"] = email;
@@ -15,7 +15,7 @@ export async function getUsers({ email }: { email?: string }) {
 }
 
 export async function getUserById(userId: string) {
-  const endpoint = `${BASE_URL}/users/${userId}`;
+  const endpoint = `${BACKEND_HOST}/users/${userId}`;
   const res = await fetch(endpoint, { cache: "no-cache" });
   const user = await res.json();
   return user;

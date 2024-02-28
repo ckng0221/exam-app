@@ -33,13 +33,17 @@ func RequireAuth(c *gin.Context) {
 	})
 	if err != nil {
 		// return
+		fmt.Println("Token not found")
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token not found"})
+		return
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
 		// Check the exp
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			fmt.Println("Token expired")
 			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
 
 		// Find the user with token sub
@@ -47,9 +51,11 @@ func RequireAuth(c *gin.Context) {
 		initializers.Db.First(&user, claims["sub"])
 
 		if user.ID == 0 {
+			fmt.Println("User not found")
 			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
-		// fmt.Println(user.Role)
+		// fmt.Println(user.ID)
 		c.Set("user", user)
 
 		// Attach to req
@@ -60,6 +66,7 @@ func RequireAuth(c *gin.Context) {
 		// fmt.Println(claims["foo"], claims["nbf"])
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
+		return
 	}
 
 }
