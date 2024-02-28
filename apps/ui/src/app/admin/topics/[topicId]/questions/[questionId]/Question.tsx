@@ -30,6 +30,8 @@ export default function Question({
 }) {
   const [question, setQuestion] = useState(defaultQuestion);
   const [removedOptions, setRemovedOptions] = useState<any>([]);
+  const [answer, setAnswer] = useState(defaultQuestion.CorrectAnswer);
+
   const router = useRouter();
 
   const textAreaClassName = `block p-2.5 ${
@@ -39,6 +41,11 @@ export default function Question({
   async function handleUpdate(formData: FormData) {
     // add removed options
     formData.append("removed-options", JSON.stringify(removedOptions));
+    let correctAnswer = formData.get("correct-answer")?.toString();
+
+    if (!correctAnswer) {
+      formData.set("correct-answer", answer);
+    }
 
     const res = await updateAdminQuestionAction(formData);
     if (res.message === "success") {
@@ -49,6 +56,11 @@ export default function Question({
   }
 
   async function handleCreate(formData: FormData) {
+    let correctAnswer = formData.get("correct-answer")?.toString();
+    if (!correctAnswer) {
+      formData.set("correct-answer", answer);
+    }
+
     const res = await createAdminQuestionAction(formData);
     if (res.message === "success") {
       toast.success("Created question");
@@ -160,6 +172,7 @@ export default function Question({
           question={question}
           handleRemove={handleRemove}
           options={question?.QuestionOptions || []}
+          setAnswer={setAnswer}
         />
         <button
           type="submit"
@@ -176,13 +189,44 @@ function QuestionOptions({
   question,
   options,
   handleRemove,
+  setAnswer,
 }: {
   question: any;
   options: ITopicQuestionOption[] | any[];
   handleRemove: (id: string) => void;
+  setAnswer: Dispatch<SetStateAction<string>>;
 }) {
-  return options?.map((option, idx) => (
-    <div key={idx} className="flex items-center mb-4">
+  return options?.map((option, idx) => {
+    return (
+      <QuestionOption
+        idx={idx}
+        key={idx}
+        question={question}
+        option={option}
+        handleRemove={handleRemove}
+        setAnswer={setAnswer}
+      />
+    );
+  });
+}
+
+function QuestionOption({
+  idx,
+  question,
+  option,
+  handleRemove,
+  setAnswer,
+}: {
+  idx: number;
+  question: any;
+  option: ITopicQuestionOption;
+  handleRemove: (id: string) => void;
+  setAnswer: Dispatch<SetStateAction<string>>;
+}) {
+  const [optionCode, setOptionCode] = useState(option.OptionCode);
+
+  return (
+    <div className="flex items-center mb-4">
       {/* Radio Button */}
       <label
       // htmlFor={`${question.ID}-${option.OptionCode}-${idx}`}
@@ -192,10 +236,13 @@ function QuestionOptions({
           // id={`${question.ID}-${option.OptionCode}-${idx}`}
           type="radio"
           title={option.Description}
-          value={option.OptionCode}
+          value={optionCode}
           name={`correct-answer`}
           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:bg-gray-200"
           defaultChecked={option.OptionCode === question.CorrectAnswer}
+          onChange={() => {
+            setAnswer(option.OptionCode);
+          }}
         />
       </label>
 
@@ -209,7 +256,9 @@ function QuestionOptions({
           name={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
           type="text"
           maxLength={1}
-          defaultValue={option.OptionCode}
+          // defaultValue={option.OptionCode}
+          value={optionCode}
+          onChange={(e) => setOptionCode(e.target.value)}
           // id={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
           className={`w-2/12 ${inputClassName}`}
         />
@@ -236,5 +285,5 @@ function QuestionOptions({
         </IconButton>
       </div>
     </div>
-  ));
+  );
 }

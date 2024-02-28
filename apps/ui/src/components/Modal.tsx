@@ -82,7 +82,9 @@ export default function Modal({
                         {title}
                       </Dialog.Title>
                       <div className="mt-2">
-                        <p className="text-sm text-gray-500">{description}</p>
+                        <span className="text-sm text-gray-500">
+                          {description}
+                        </span>
                       </div>
                     </div>
                   </div>
