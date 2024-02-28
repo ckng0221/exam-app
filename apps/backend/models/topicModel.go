@@ -16,7 +16,6 @@ type Topic struct {
 type TopicQuestion struct {
 	ID              uint `gorm:"primarykey"`
 	Question        string
-	QuestionNumber  uint   `gorm:"uniqueIndex:idx_question_topic"`
 	CorrectAnswer   string `gorm:"type:varchar(10)"`
 	QuestionScore   float32
 	TopicID         uint              `gorm:"uniqueIndex:idx_question_topic"`
@@ -27,7 +26,6 @@ type TopicQuestion struct {
 type TopicQuestionSafe struct {
 	ID              uint `gorm:"primarykey"`
 	Question        string
-	QuestionNumber  uint              `gorm:"uniqueIndex:idx_question_topic"`
 	TopicID         uint              `gorm:"uniqueIndex:idx_question_topic"`
 	Topic           *Topic            `json:",omitempty"`
 	QuestionOptions []*QuestionOption `json:",omitempty" gorm:"foreignKey:QuestionID"`

@@ -10,7 +10,6 @@ export interface ITopic {
 export interface ITopicQuestion {
   ID: string;
   Question: string;
-  QuestionNumber: number;
   CorrectAnswer: string;
   QuestionScore: number;
   TopicID: string;
@@ -19,7 +18,6 @@ export interface ITopicQuestion {
 
 export interface ITopicQuestionCreate {
   Question: string;
-  QuestionNumber: number;
   CorrectAnswer: string;
   QuestionScore: number;
   TopicID: number;
@@ -111,16 +109,24 @@ export async function getAllQuestionsByTopic(
   return questions;
 }
 
+export async function getQuestionById(questionId: string) {
+  const endpoint = `${BASE_URL}/topic-questions/${questionId}`;
+  const res = await fetch(endpoint, { method: "GET" });
+  const data = await res.json();
+  return data;
+}
+
 export async function getQuestionDetails(
   topicId: string,
-  questionNumber: string
+  questionPage: string
 ) {
   const endpoint = `${BASE_URL}/topics/${topicId}/questions?`;
 
   const res = await fetch(
     endpoint +
       new URLSearchParams({
-        number: questionNumber,
+        page: questionPage,
+        "page-size": "1",
       }),
     { cache: "no-cache" }
   );
@@ -140,14 +146,15 @@ export async function getQuestionDetails(
 
 export async function getQuestionDetailsSafe(
   topicId: string,
-  questionNumber: string
+  questionPage: string
 ) {
   const endpoint = `${BASE_URL}/topics/${topicId}/questions?`;
 
   const res = await fetch(
     endpoint +
       new URLSearchParams({
-        number: questionNumber,
+        page: questionPage,
+        "page-size": "1",
       }),
     { cache: "no-cache" }
   );

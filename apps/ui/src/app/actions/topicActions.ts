@@ -64,7 +64,6 @@ export async function createTopicAction(formData: FormData) {
 
 export async function updateAdminQuestionAction(formData: FormData) {
   const questionId = formData.get("question-id")?.toString();
-  const questionNumber = Number(formData.get("question-number")?.toString());
   const question = formData.get("question-input")?.toString();
   const correctAnswer = formData.get("correct-answer")?.toString();
   const questionScore = Number(formData.get("question-score")?.toString());
@@ -72,7 +71,6 @@ export async function updateAdminQuestionAction(formData: FormData) {
   console.log(formData);
 
   const questionPayload = {
-    QuestionNumber: questionNumber,
     Question: question,
     CorrectAnswer: correctAnswer,
     QuestionScore: questionScore,
@@ -147,7 +145,6 @@ export async function updateAdminQuestionAction(formData: FormData) {
 }
 
 export async function createAdminQuestionAction(formData: FormData) {
-  const questionNumber = Number(formData.get("question-number")?.toString());
   const question = formData.get("question-input")?.toString() || "";
   const correctAnswer = formData.get("correct-answer")?.toString() || "";
   const questionScore = Number(formData.get("question-score")?.toString());
@@ -156,7 +153,6 @@ export async function createAdminQuestionAction(formData: FormData) {
   // console.log(formData);
 
   const questionPayload = {
-    QuestionNumber: questionNumber,
     Question: question,
     CorrectAnswer: correctAnswer,
     QuestionScore: questionScore,

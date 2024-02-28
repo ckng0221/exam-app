@@ -1,11 +1,11 @@
-import { getQuestionDetails } from "@/api/question";
+import { getQuestionById, getQuestionDetails } from "@/api/question";
 import ActiveLastBreadcrumb from "@/components/BeadCrumb";
 import Question from "./Question";
 
 export default async function AdminQuestionPage({
   params,
 }: {
-  params: { topicId: string; questionNumber: string };
+  params: { topicId: string; questionId: string };
 }) {
   const breadcrumbs = [
     { name: "Admin", href: "/admin" },
@@ -13,14 +13,15 @@ export default async function AdminQuestionPage({
     { name: params.topicId, href: `/admin/topics/${params.topicId}` },
     { name: "Questions", href: `/admin/topics/${params.topicId}/questions` },
     {
-      name: params.questionNumber,
-      href: `/admin/topics/${params.topicId}/questions/${params.questionNumber}`,
+      name: params.questionId,
+      href: `/admin/topics/${params.topicId}/questions/${params.questionId}`,
     },
   ];
-  const { questionDetail } = await getQuestionDetails(
-    params.topicId,
-    params.questionNumber
-  );
+  // const { questionDetail } = await getQuestionDetails(
+  //   params.topicId,
+  //   params.questionNumber
+  // );
+  const question = await getQuestionById(params.questionId);
 
   return (
     <>
@@ -28,7 +29,7 @@ export default async function AdminQuestionPage({
         <div className="mb-4">
           <ActiveLastBreadcrumb breadcrumbs={breadcrumbs} />
         </div>
-        <Question topicId={params.topicId} defaultQuestion={questionDetail} />
+        <Question topicId={params.topicId} defaultQuestion={question} />
       </div>
     </>
   );

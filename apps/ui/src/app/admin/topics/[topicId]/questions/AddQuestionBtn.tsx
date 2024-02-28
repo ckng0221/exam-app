@@ -1,20 +1,13 @@
 "use client";
 import { useState } from "react";
 import Modal from "../../../../../components/Modal";
-import Question from "./[questionNumber]/Question";
+import Question from "./[questionId]/Question";
 
-export default function AddQuestionBtn({
-  topicId,
-  defaultQuestionNumber,
-}: {
-  topicId: string;
-  defaultQuestionNumber: number;
-}) {
+export default function AddQuestionBtn({ topicId }: { topicId: string }) {
   const [openModal, setOpenModal] = useState(false);
   const question = {
     ID: "new",
     Question: "",
-    QuestionNumber: defaultQuestionNumber,
     CorrectAnswer: "",
     QuestionScore: 1,
     TopicID: topicId,

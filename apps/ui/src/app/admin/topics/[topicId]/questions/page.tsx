@@ -44,10 +44,7 @@ function QuestionLinks({
           />
         );
       })}
-      <AddQuestionBtn
-        topicId={topicId}
-        defaultQuestionNumber={questions.length + 1}
-      />
+      <AddQuestionBtn topicId={topicId} />
     </>
   );
 }
@@ -59,13 +56,13 @@ function QuestionLink({
   topicId: string;
   question: ITopicQuestion;
 }) {
-  const path = `/admin/topics/${topicId}/questions/${question.QuestionNumber}`;
+  const path = `/admin/topics/${topicId}/questions/${question.ID}`;
 
   return (
     <div className="mb-4">
       <Link href={path} component={NextLink}>
-        Question:&nbsp;
-        {question.QuestionNumber}
+        Question ID:&nbsp;
+        {question.ID}
       </Link>
     </div>
   );

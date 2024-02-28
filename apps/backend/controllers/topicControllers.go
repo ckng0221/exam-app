@@ -153,16 +153,11 @@ func DeleteOneTopic(c *gin.Context) {
 
 func GetOneTopicQuestions(c *gin.Context) {
 	id := c.Param("id")
-	questionNumber := c.Query("number")
 	options := c.Query("options")
 
 	var topicQuestions []models.TopicQuestion
 	m := make(map[string]interface{})
 	m["topic_id"] = id
-
-	if questionNumber != "" {
-		m["question_number"] = questionNumber
-	}
 
 	getOptions, err := strconv.ParseBool(options)
 
@@ -171,9 +166,9 @@ func GetOneTopicQuestions(c *gin.Context) {
 	}
 
 	if getOptions {
-		initializers.Db.Preload("QuestionOptions").Where(m).Find(&topicQuestions).Order("QuestionNumber")
+		initializers.Db.Preload("QuestionOptions").Scopes(utils.Paginate(c)).Where(m).Find(&topicQuestions).Order("ID")
 	} else {
-		initializers.Db.Where(m).Find(&topicQuestions).Order("QuestionNumber")
+		initializers.Db.Scopes(utils.Paginate(c)).Where(m).Find(&topicQuestions).Order("ID")
 	}
 	c.JSON(http.StatusOK, topicQuestions)
 }
@@ -193,7 +188,7 @@ func GetOneTopicQuestionsCount(c *gin.Context) {
 // Questions
 func GetAllTopicQuestions(c *gin.Context) {
 	var topicQuestions []models.TopicQuestion
-	initializers.Db.Find(&topicQuestions)
+	initializers.Db.Scopes(utils.Paginate(c)).Find(&topicQuestions)
 
 	c.JSON(http.StatusOK, topicQuestions)
 }
@@ -266,18 +261,16 @@ func UpdateOneTopicQuestion(c *gin.Context) {
 
 	//
 	var body struct {
-		Question       string
-		QuestionNumber uint
-		CorrectAnswer  string
-		QuestionScore  float32
+		Question      string
+		CorrectAnswer string
+		QuestionScore float32
 	}
 	c.Bind(&body)
 
 	initializers.Db.Model(&post).Updates(models.TopicQuestion{
-		Question:       body.Question,
-		QuestionNumber: body.QuestionNumber,
-		CorrectAnswer:  body.CorrectAnswer,
-		QuestionScore:  body.QuestionScore,
+		Question:      body.Question,
+		CorrectAnswer: body.CorrectAnswer,
+		QuestionScore: body.QuestionScore,
 	})
 
 	c.JSON(200, post)

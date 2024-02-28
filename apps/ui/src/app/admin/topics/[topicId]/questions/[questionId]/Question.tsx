@@ -99,19 +99,26 @@ export default function Question({
         />
         <input type="text" value={topicId} name="topic-id" hidden readOnly />
         <div className="mb-4">
-          <label
-            htmlFor="question-number"
-            className="block mb- text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Question Number:
-          </label>
-          <input
-            type="number"
-            id="question-number"
-            name="question-number"
-            className={` ${isNew ? "w-full" : "w-1/12"} mb-4 ${inputClassName}`}
-            defaultValue={question.QuestionNumber}
-          />
+          {!isNew && (
+            <>
+              <label
+                htmlFor="question-id"
+                className="block mb- text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Question ID:
+              </label>
+              <input
+                type="number"
+                id="question-id"
+                name="question-id"
+                className={` ${
+                  isNew ? "w-full" : "w-1/12"
+                } mb-4 ${inputClassName}`}
+                defaultValue={question?.ID}
+                disabled
+              />
+            </>
+          )}
           <label
             htmlFor="question-input"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -175,47 +182,51 @@ function QuestionOptions({
   handleRemove: (id: string) => void;
 }) {
   return options?.map((option, idx) => (
-    <div key={option.ID} className="flex items-center mb-4">
+    <div key={idx} className="flex items-center mb-4">
       {/* Radio Button */}
       <label
-        // htmlFor={`${question.ID}-${option.OptionCode}-${idx}`}
-        className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-      ></label>
-      <input
-        // id={`${question.ID}-${option.OptionCode}-${idx}`}
-        type="radio"
-        title={option.Description}
-        value={option.OptionCode}
-        name={`correct-answer`}
-        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:bg-gray-200"
-        defaultChecked={option.OptionCode === question.CorrectAnswer}
-      />
+      // htmlFor={`${question.ID}-${option.OptionCode}-${idx}`}
+      // className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+      >
+        <input
+          // id={`${question.ID}-${option.OptionCode}-${idx}`}
+          type="radio"
+          title={option.Description}
+          value={option.OptionCode}
+          name={`correct-answer`}
+          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:bg-gray-200"
+          defaultChecked={option.OptionCode === question.CorrectAnswer}
+        />
+      </label>
 
       <div className="flex content-center gap-2">
         {/* OptionCode */}
         <label
-          htmlFor={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
-          className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+        // htmlFor={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
+        // className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
         ></label>
         <input
           name={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
           type="text"
           maxLength={1}
           defaultValue={option.OptionCode}
-          id={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
+          // id={`optionid-${option.ID}-optioncode-rowidx-${idx}`}
           className={`w-2/12 ${inputClassName}`}
         />
 
         {/* Description */}
-        <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-          <input
-            name={`optionid-${option.ID}-description-rowidx-${idx}`}
-            id={`optionid-${option.ID}-description-rowidx-${idx}`}
-            type="text"
-            defaultValue={option.Description}
-            className={inputClassName}
-          />
-        </label>
+        <label
+          htmlFor={`optionid-${option.ID}-description-rowidx-${idx}`}
+          title="option"
+          className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+        ></label>
+        <input
+          name={`optionid-${option.ID}-description-rowidx-${idx}`}
+          id={`optionid-${option.ID}-description-rowidx-${idx}`}
+          type="text"
+          defaultValue={option.Description}
+          className={inputClassName}
+        />
         <IconButton
           aria-label="delete"
           color="error"

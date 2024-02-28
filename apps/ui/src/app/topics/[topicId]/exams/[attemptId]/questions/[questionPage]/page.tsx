@@ -10,21 +10,18 @@ import Link from "next/link";
 export default async function ExamAttempt({
   params,
 }: {
-  params: { topicId: string; attemptId: string; questionNumber: string };
+  params: { topicId: string; attemptId: string; questionPage: string };
 }) {
   const attempt = await getAttemptById(params.attemptId);
   const isSubmitted = attempt.IsSubmitted ? true : false;
   let questionId, question, questionDetail;
   let fetchResult;
   if (isSubmitted) {
-    fetchResult = await getQuestionDetails(
-      params.topicId,
-      params.questionNumber
-    );
+    fetchResult = await getQuestionDetails(params.topicId, params.questionPage);
   } else {
     fetchResult = await getQuestionDetailsSafe(
       params.topicId,
-      params.questionNumber
+      params.questionPage
     );
   }
   questionId = fetchResult.questionId;
@@ -39,8 +36,8 @@ export default async function ExamAttempt({
   const btnClass =
     "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800";
 
-  const prevQuestion = Number(params.questionNumber) - 1;
-  const nextQuestion = Number(params.questionNumber) + 1;
+  const prevQuestion = Number(params.questionPage) - 1;
+  const nextQuestion = Number(params.questionPage) + 1;
   const prevQuestionPath = `/topics/${params.topicId}/exams/${params.attemptId}/questions/${prevQuestion}`;
   const nextQuestionPath = `/topics/${params.topicId}/exams/${params.attemptId}/questions/${nextQuestion}`;
   const reviewPath = `/topics/${params.topicId}/exams/${params.attemptId}/review`;
@@ -52,7 +49,7 @@ export default async function ExamAttempt({
   return (
     <div className="p-4 md:pl-16">
       <div className="mb-4">
-        <p className="">Question: {params.questionNumber}</p>
+        <p className="">Question: {params.questionPage}</p>
         <p>{question.Question}</p>
       </div>
 
