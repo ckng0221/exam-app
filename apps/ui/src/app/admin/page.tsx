@@ -1,5 +1,5 @@
 import { Forbidden, Unauthorized } from "@/components/error/ErrorComp";
-import { getTopics } from "../../api/question";
+import { getTopics } from "../../api/topic";
 import { getUserByCookie } from "../../utils/common";
 import { TopicTable } from "./TopicTable";
 

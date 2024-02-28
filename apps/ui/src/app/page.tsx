@@ -1,4 +1,4 @@
-import { getTopics } from "../api/question";
+import { getTopics } from "../api/topic";
 import TopicCard from "../components/TopicCard";
 
 export default function Home() {

@@ -3,7 +3,7 @@ import {
   getAttemptAnswers,
   getAttemptById,
 } from "@/api/attempt";
-import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/question";
+import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/topic";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
@@ -46,7 +46,6 @@ async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
   const questions: ITopicQuestion[] = await getAllQuestionsByTopic(topicId);
   const attemptAnswers: IAttemptAnswer[] = await getAttemptAnswers(attemptId);
 
-  //   const questionNumbers = _.range(totalQuestions);
   const questionPath = `/topics/${topicId}/exams/${attemptId}/questions`;
 
   return (
@@ -64,10 +63,11 @@ async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
             </tr>
           </thead>
           <tbody>
-            {questions.map((question) => {
+            {questions.map((question, idx) => {
               const questionAnswer = attemptAnswers.find(
                 (x: any) => x.QuestionID === question.ID
               );
+              const questionPage = idx + 1;
 
               return (
                 <tr
@@ -78,12 +78,12 @@ async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"
                   >
-                    <Link href={`${questionPath}/${question.QuestionNumber}`}>
-                      {question.QuestionNumber}
+                    <Link href={`${questionPath}/${questionPage}`}>
+                      {questionPage}
                     </Link>
                   </th>
                   <td className="px-6 py-4">
-                    <Link href={`${questionPath}/${question.QuestionNumber}`}>
+                    <Link href={`${questionPath}/${questionPage}`}>
                       {questionAnswer?.Answer || "_"}
                     </Link>
                     &nbsp;

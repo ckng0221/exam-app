@@ -12,6 +12,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // Topics
@@ -36,6 +37,7 @@ func GetAllTopics(c *gin.Context) {
 	}
 
 	initializers.Db.Scopes(utils.Paginate(c)).Where(m).Find(&topics)
+	// initializers.Db.Scopes(utils.Paginate(c)).Preload("TopicQuestions.QuestionOptions").Where(m).Find(&topics)
 
 	c.JSON(http.StatusOK, topics)
 }
@@ -89,7 +91,20 @@ func GetOneTopic(c *gin.Context) {
 	id := c.Param("id")
 
 	var topic models.Topic
-	result := initializers.Db.First(&topic, id)
+	verbose := c.Query("verbose")
+
+	isVerbose, err := strconv.ParseBool(verbose)
+	if err != nil {
+		isVerbose = false
+	}
+
+	var result *gorm.DB
+	if isVerbose {
+		result = initializers.Db.Preload("TopicQuestions.QuestionOptions").First(&topic, id)
+	} else {
+		result = initializers.Db.First(&topic, id)
+	}
+
 	if result.Error != nil {
 		fmt.Println(result.Error)
 	}
@@ -138,16 +153,23 @@ func DeleteOneTopic(c *gin.Context) {
 
 func GetOneTopicQuestions(c *gin.Context) {
 	id := c.Param("id")
-	questionNumber := c.Query("number")
+	options := c.Query("options")
 
 	var topicQuestions []models.TopicQuestion
 	m := make(map[string]interface{})
 	m["topic_id"] = id
 
-	if questionNumber != "" {
-		m["question_number"] = questionNumber
+	getOptions, err := strconv.ParseBool(options)
+
+	if err != nil {
+		getOptions = false
 	}
-	initializers.Db.Where(m).Find(&topicQuestions).Order("QuestionNumber")
+
+	if getOptions {
+		initializers.Db.Preload("QuestionOptions").Scopes(utils.Paginate(c)).Where(m).Find(&topicQuestions).Order("ID")
+	} else {
+		initializers.Db.Scopes(utils.Paginate(c)).Where(m).Find(&topicQuestions).Order("ID")
+	}
 	c.JSON(http.StatusOK, topicQuestions)
 }
 
@@ -166,7 +188,7 @@ func GetOneTopicQuestionsCount(c *gin.Context) {
 // Questions
 func GetAllTopicQuestions(c *gin.Context) {
 	var topicQuestions []models.TopicQuestion
-	initializers.Db.Find(&topicQuestions)
+	initializers.Db.Scopes(utils.Paginate(c)).Find(&topicQuestions)
 
 	c.JSON(http.StatusOK, topicQuestions)
 }
@@ -239,18 +261,16 @@ func UpdateOneTopicQuestion(c *gin.Context) {
 
 	//
 	var body struct {
-		Question       string
-		QuestionNumber uint
-		CorrectAnswer  string
-		QuestionScore  float32
+		Question      string
+		CorrectAnswer string
+		QuestionScore float32
 	}
 	c.Bind(&body)
 
 	initializers.Db.Model(&post).Updates(models.TopicQuestion{
-		Question:       body.Question,
-		QuestionNumber: body.QuestionNumber,
-		CorrectAnswer:  body.CorrectAnswer,
-		QuestionScore:  body.QuestionScore,
+		Question:      body.Question,
+		CorrectAnswer: body.CorrectAnswer,
+		QuestionScore: body.QuestionScore,
 	})
 
 	c.JSON(200, post)
@@ -260,6 +280,7 @@ func DeleteOneTopicQuestion(c *gin.Context) {
 	id := c.Param("id")
 
 	initializers.Db.Delete(&models.TopicQuestion{}, id)
+	fmt.Println("lalal")
 
 	// response
 	c.Status(202)
@@ -340,7 +361,8 @@ func UpdateOneQuestionOption(c *gin.Context) {
 func DeleteOneQuestionOption(c *gin.Context) {
 	id := c.Param("id")
 
-	initializers.Db.Delete(&models.QuestionOption{}, id)
+	// Hard delete
+	initializers.Db.Unscoped().Delete(&models.QuestionOption{}, id)
 
 	// response
 	c.Status(202)

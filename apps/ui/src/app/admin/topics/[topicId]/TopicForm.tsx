@@ -1,5 +1,5 @@
 "use client";
-import { ITopic } from "@/api/question";
+import { ITopic } from "@/api/topic";
 import {
   createTopicAction,
   updateTopicAction,
@@ -73,8 +73,15 @@ export default function TopicForm({
                 value={topicInput.ID}
                 className={inputClassName}
                 disabled
+                readOnly
               />
-              <input type="text" value={topicInput.ID} name="topicid" hidden />
+              <input
+                type="text"
+                value={topicInput.ID}
+                name="topicid"
+                hidden
+                readOnly
+              />
             </div>
           )}
           <div className="mb-5">
@@ -131,7 +138,6 @@ export default function TopicForm({
                   PassPercentage: Number(e.target.value),
                 })
               }
-              defaultValue={70}
             />
           </div>
           <div className="mb-5">

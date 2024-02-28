@@ -1,4 +1,4 @@
-import { getTopicById } from "../../../../api/question";
+import { getTopicById } from "../../../../api/topic";
 import TopicForm from "./TopicForm";
 import ActiveLastBreadcrumb from "../../../../components/BeadCrumb";
 import { getUserByCookie } from "../../../../utils/common";
@@ -6,6 +6,8 @@ import {
   Forbidden,
   Unauthorized,
 } from "../../../../components/error/ErrorComp";
+import { Link } from "@mui/material";
+import nextLink from "next/link";
 
 export default async function TopicEditPage({
   params,
@@ -21,13 +23,25 @@ export default async function TopicEditPage({
   const breadcrumbs = [
     { name: "Admin", href: "/admin" },
     { name: "Topic", href: "/admin" },
-    { name: params.topicId, href: `/admin/topic/${params.topicId}` },
+    { name: params.topicId, href: `/admin/topics/${params.topicId}` },
   ];
 
   return (
     <div className="p-4">
       <ActiveLastBreadcrumb breadcrumbs={breadcrumbs} />
       <TopicForm isNew={false} topic={topic} />
+      <UpdateQuestions topicId={params.topicId} />
+    </div>
+  );
+}
+
+function UpdateQuestions({ topicId }: { topicId: string }) {
+  const path = `/admin/topics/${topicId}/questions`;
+  return (
+    <div className="max-w-sm mx-auto">
+      <Link href={path} component={nextLink}>
+        Update Questions
+      </Link>
     </div>
   );
 }

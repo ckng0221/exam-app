@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getTopicById, getTotalQuestion } from "../../../api/question";
+import { getTopicById, getTotalQuestion } from "../../../api/topic";
 
 export default async function Topic({
   params,
