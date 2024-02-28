@@ -6,19 +6,19 @@ The `Exam App` is an Online Examination App. The Exam App allows users (admins) 
 
 ## Backend
 
-Programming Language: `Go`
-Web framework: `Gin`
-Object Relation Mapper(ORM): `Gorm`
+- Programming Language: `Go`
+- Web framework: `Gin`
+- Object Relation Mapper(ORM): `Gorm`
 
 ## Frontend
 
-Web Framework: `Next.js`
-CSS framework: `Tailwind CSS`
-UI Library: `Material UI`
+- Web Framework: `Next.js`
+- CSS framework: `Tailwind CSS`
+- UI Library: `Material UI`
 
 ## Build
 
-Build tool: `Tuborepo`
+- Build tool: `Tuborepo`
 
 # Get started
 
