@@ -14,11 +14,13 @@ type Topic struct {
 }
 
 type TopicQuestion struct {
-	ID              uint `gorm:"primarykey"`
-	Question        string
-	CorrectAnswer   string `gorm:"type:varchar(10)"`
+	ID            uint `gorm:"primarykey"`
+	Question      string
+	CorrectAnswer string `gorm:"type:varchar(10)"`
+	// QuestionNumber  uint   `gorm:"uniqueIndex:idx_question_topic"`
+	// QuestionOrder  uint   // Do not need unique, to avoid duplicate error. only for sorting //TODO: for future custom ordering, drag and drop on frontend
 	QuestionScore   float32
-	TopicID         uint              `gorm:"uniqueIndex:idx_question_topic"`
+	TopicID         uint
 	Topic           *Topic            `json:",omitempty"`
 	QuestionOptions []*QuestionOption `json:",omitempty" gorm:"foreignKey:QuestionID"`
 }
@@ -26,7 +28,7 @@ type TopicQuestion struct {
 type TopicQuestionSafe struct {
 	ID              uint `gorm:"primarykey"`
 	Question        string
-	TopicID         uint              `gorm:"uniqueIndex:idx_question_topic"`
+	TopicID         uint
 	Topic           *Topic            `json:",omitempty"`
 	QuestionOptions []*QuestionOption `json:",omitempty" gorm:"foreignKey:QuestionID"`
 }
