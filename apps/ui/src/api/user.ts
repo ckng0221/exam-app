@@ -39,3 +39,21 @@ export async function getUserById(userId: string) {
   const user = await res.json();
   return user;
 }
+
+export async function getUserRoles() {
+  const endpoint = `${BACKEND_HOST}/roles`;
+  const res = await fetch(endpoint, { cache: "no-cache" });
+  const roles = await res.json();
+  return roles;
+}
+
+export async function updateUserById(userId: string, body: Partial<IUser>) {
+  const endpoint = `${BACKEND_HOST}/users/${userId}`;
+  const payload = JSON.stringify(body);
+  const res = await fetch(endpoint, {
+    method: "PATCH",
+    body: payload,
+    headers: { "Content-Type": "application/json" },
+  });
+  return res;
+}
