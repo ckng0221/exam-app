@@ -1,22 +1,25 @@
 "use client";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton } from "@mui/material";
+import { Chip, IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ITopic } from "../../api/topic";
-import Badge from "../../components/Badge";
-import DeleteTopicIconBtn from "./topics/DeleteTopicIconBtn";
+import { IUser } from "../../../api/user";
+import DeleteUserIconBtn from "./DeleteUserIconBtn";
 
 interface IProps {
-  topics: ITopic[];
+  users: IUser[];
 }
 
-export function TopicTable({ topics }: IProps) {
+const roleColor: any = {
+  admin: "error",
+  member: "default",
+};
+
+export function UserTable({ users }: IProps) {
   const router = useRouter();
 
   return (
     <div className="relative overflow-x-auto">
-      <h1 className="mb-2 font-bold">Topics</h1>
+      <h1 className="mb-2 font-bold">Users</h1>
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -24,16 +27,16 @@ export function TopicTable({ topics }: IProps) {
               ID
             </th>
             <th scope="col" className="py-3">
-              Topic Name
+              Name
             </th>
             <th scope="col" className="py-3">
-              Description
+              Email
             </th>
             <th scope="col" className="py-3">
-              Passing Percentage (%)
+              Role
             </th>
             <th scope="col" className="py-3">
-              Published
+              Created At
             </th>
             <th scope="col" className="py-3">
               Action
@@ -41,35 +44,34 @@ export function TopicTable({ topics }: IProps) {
           </tr>
         </thead>
         <tbody>
-          {topics.map((topic) => {
-            const editPath = `/admin/topics/${topic.ID}`;
+          {users.map((user) => {
+            const editPath = `/admin/users/${user.ID}`;
 
             return (
               <tr
-                key={topic.ID}
+                key={user.ID}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
               >
                 <th
                   scope="row"
                   className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {topic.ID}
+                  {user.ID}
                 </th>
                 <th
                   scope="row"
                   className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {topic.Name}
+                  {user.Name}
                 </th>
-                <td className="py-4">{topic.Description}</td>
-                <td className="py-4">{topic.PassPercentage}</td>
+                <td className="py-4">{user.Email}</td>
                 <td className="py-4">
-                  {topic.IsPublished ? (
-                    <Badge content="True" color="green" />
-                  ) : (
-                    <Badge content="False" color="red" />
+                  {user.Role && (
+                    <Chip label={user.Role} color={roleColor[user.Role]} />
                   )}
                 </td>
+                <td className="py-4">{user.CreatedAt}</td>
+
                 <td className="py-4">
                   <IconButton
                     aria-label="edit"
@@ -81,9 +83,9 @@ export function TopicTable({ topics }: IProps) {
                     <EditIcon />
                   </IconButton>
 
-                  <DeleteTopicIconBtn
-                    topicId={topic.ID || ""}
-                    topicName={topic.Name}
+                  <DeleteUserIconBtn
+                    userId={user.ID || ""}
+                    userName={user.Name}
                   />
                 </td>
               </tr>
@@ -91,15 +93,6 @@ export function TopicTable({ topics }: IProps) {
           })}
         </tbody>
       </table>
-
-      <button
-        onClick={() => {
-          router.push("/admin/topics/create");
-        }}
-        className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      >
-        Create Topic
-      </button>
     </div>
   );
 }

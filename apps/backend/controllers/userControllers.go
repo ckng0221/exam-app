@@ -114,20 +114,26 @@ func GetOneUser(c *gin.Context) {
 func UpdateOneUser(c *gin.Context) {
 	// get the id
 	id := c.Param("id")
-	var post models.User
-	initializers.Db.First(&post, id)
+	var user models.User
+	initializers.Db.First(&user, id)
 
-	//
-	var body struct {
-		Name string
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		c.AbortWithError(400, err)
+		return
 	}
-	c.Bind(&body)
+	var userM map[string]interface{}
 
-	initializers.Db.Model(&post).Updates(models.User{
-		Name: body.Name,
-	})
+	err = json.Unmarshal(body, &userM)
 
-	c.JSON(200, post)
+	if err != nil {
+		c.AbortWithError(400, err)
+		return
+	}
+
+	initializers.Db.Model(&user).Updates(&userM)
+
+	c.JSON(200, user)
 }
 
 func DeleteOneUser(c *gin.Context) {
@@ -137,4 +143,8 @@ func DeleteOneUser(c *gin.Context) {
 
 	// response
 	c.Status(202)
+}
+
+func GetUserRoles(c *gin.Context) {
+	c.JSON(http.StatusOK, models.Roles)
 }

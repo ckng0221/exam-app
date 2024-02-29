@@ -4,6 +4,7 @@ import { Unauthorized } from "@/components/error/ErrorComp";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import Badge from "../../components/Badge";
+import { Chip } from "@mui/material";
 
 export default async function page() {
   const accessToken = cookies().get("Authorization");
@@ -56,7 +57,7 @@ async function Attempts({ user_id }: { user_id: string }) {
             const path = attempt.IsSubmitted ? "result" : "review";
             const attemptPath = `topics/${attempt.TopicID}/exams/${attempt.ID}/${path}`;
             return (
-              <li key={attempt.ID}>
+              <li key={attempt.ID} className="mb-2">
                 <Link
                   href={attemptPath}
                   className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -66,16 +67,17 @@ async function Attempts({ user_id }: { user_id: string }) {
                 </Link>
                 &nbsp;
                 {attempt.IsSubmitted ? (
-                  <Badge color="green" content="Completed" />
+                  <Chip label="Completed" color="success" size="small" />
                 ) : (
-                  <Badge color="yellow" content="In Progress" />
+                  <Chip label="In Progress" color="warning" size="small" />
                 )}
                 &nbsp;
-                {attempt.IsPass ? (
-                  <Badge color="green" content="Passed" />
-                ) : (
-                  <Badge color="red" content="Failed" />
-                )}
+                {attempt.IsSubmitted &&
+                  (attempt.IsPass ? (
+                    <Chip label="Passed" color="success" size="small" />
+                  ) : (
+                    <Chip label="Failed" color="error" size="small" />
+                  ))}
               </li>
             );
           })}

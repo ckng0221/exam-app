@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTopicById, getTotalQuestion } from "../../../api/topic";
+import { createAttempts } from "../../../api/attempt";
+import { getAccessTokenFromCookie } from "../../../utils/common";
 
 export default async function Topic({
   params,
@@ -44,23 +46,11 @@ export default async function Topic({
 async function startExam(formData: FormData) {
   "use server";
 
-  const BASE_URL = "http://localhost:8000";
-  const endpoint = `${BASE_URL}/attempts`;
-  const topicId = formData.get("topic_id");
+  const topicId = formData.get("topic_id")?.toString() || "";
+  const accessToken = await getAccessTokenFromCookie();
 
-  const res = await fetch(endpoint, {
-    method: "POST",
-    body: JSON.stringify([
-      {
-        UserId: 1,
-        TopicId: Number(topicId),
-      },
-    ]),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const attempts = await res.json();
+  const attempts = await createAttempts(topicId, accessToken?.value || "");
+
   const attemptId = attempts[0].ID;
 
   redirect(`/topics/${topicId}/exams/${attemptId}/questions/1`);

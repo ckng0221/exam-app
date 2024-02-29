@@ -9,7 +9,7 @@ export default async function AdminQuestionPage({
 }) {
   const breadcrumbs = [
     { name: "Admin", href: "/admin" },
-    { name: "Topics", href: "/admin" },
+    { name: "Topics", href: "/admin/topics" },
     { name: params.topicId, href: `/admin/topics/${params.topicId}` },
     { name: "Questions", href: `/admin/topics/${params.topicId}/questions` },
     {

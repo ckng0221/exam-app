@@ -7,7 +7,7 @@ import AddQuestionBtn from "./AddQuestionBtn";
 async function QuestionsAdminPage({ params }: { params: { topicId: string } }) {
   const breadcrumbs = [
     { name: "Admin", href: "/admin" },
-    { name: "Topics", href: "/admin" },
+    { name: "Topics", href: "/admin/topics" },
     { name: params.topicId, href: `/admin/topics/${params.topicId}` },
     { name: "Questions", href: `/admin/topics/${params.topicId}/questions` },
   ];

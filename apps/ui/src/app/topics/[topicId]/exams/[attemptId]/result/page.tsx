@@ -2,6 +2,7 @@ import { getAttemptById } from "@/api/attempt";
 import { LocalDatetime } from "@/components/LocalDate";
 import Link from "next/link";
 import Badge from "../../../../../../components/Badge";
+import { Chip } from "@mui/material";
 
 export default async function page({
   params,
@@ -12,7 +13,7 @@ export default async function page({
   const reviewPath = `/topics/${params.topicId}/exams/${params.attemptId}/review`;
   const questionPath = `/topics/${params.topicId}/exams/${params.attemptId}/questions/1`;
   const passOrFail = attempt.IsPass ? "Passed" : "Failed";
-  const badgeColor = passOrFail === "Passed" ? "green" : "red";
+  const badgeColor = passOrFail === "Passed" ? "success" : "error";
 
   return (
     <div className="p-4 px-16">
@@ -27,12 +28,13 @@ export default async function page({
               </b>
             </p>
             <p>
-              Final Score: <b>{attempt.Score}</b>
+              Final Score: <b>{attempt.Score || 0}</b>
               &nbsp;({attempt.ScorePercentage}%)
             </p>
-            <p>
-              Status: <Badge color={badgeColor} content={passOrFail} />
-            </p>
+            <span>
+              Status:{" "}
+              <Chip color={badgeColor} label={passOrFail} size="small" />
+            </span>
           </div>
         </div>
       )}

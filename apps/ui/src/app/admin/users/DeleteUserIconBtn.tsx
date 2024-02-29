@@ -2,18 +2,24 @@ import React from "react";
 import DeleteIconBtn from "../../../components/DeleteIconBtn";
 
 import { useRouter } from "next/navigation";
-import { deleteTopicAction } from "../../actions/topicActions";
+import { deleteUserAction } from "../../actions/userActions";
+import { toast } from "react-hot-toast";
 
 interface IProps {
-  topicId: string;
-  topicName: string;
+  userId: string;
+  userName: string;
 }
 
-export default function DeleteTopicIconBtn({ topicId, topicName }: IProps) {
+export default function DeleteUserIconBtn({ userId, userName }: IProps) {
   const router = useRouter();
   async function handleConfirmDelete() {
-    await deleteTopicAction(topicId);
-    router.push("/admin/topics");
+    const res = await deleteUserAction(userId);
+    if (res?.message === "success") {
+      toast.success(`Deleted user ID ${userId}: ${userName} `);
+      router.push("/admin/users");
+    } else {
+      toast.error(res?.message || "");
+    }
     setOpenModal(false);
   }
   const [openModal, setOpenModal] = React.useState(false);
@@ -22,7 +28,7 @@ export default function DeleteTopicIconBtn({ topicId, topicName }: IProps) {
     <>
       Are you sure to delete{" "}
       <b>
-        Topic ID: {topicId} - {topicName}{" "}
+        User ID: {userId} - {userName}{" "}
       </b>
       ?
     </>
@@ -34,7 +40,7 @@ export default function DeleteTopicIconBtn({ topicId, topicName }: IProps) {
         handleDeleteClick={() => setOpenModal(true)}
         openModal={openModal}
         setOpenModal={setOpenModal}
-        title="Delete Topic"
+        title="Delete User"
         description={description()}
         handleConfirmDelete={handleConfirmDelete}
       />

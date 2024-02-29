@@ -21,3 +21,8 @@ export async function isAdmin() {
   if (!user) return false;
   return user.Role === "admin";
 }
+
+export async function getAccessTokenFromCookie() {
+  const accessToken = cookies().get("Authorization");
+  return accessToken;
+}

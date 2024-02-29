@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000";
+const BACKEND_HOST = process.env.BACKEND_HOST || "http://localhost:8000";
 
 export interface ITopic {
   ID?: string;
@@ -30,7 +30,7 @@ export interface ITopicQuestionOption {
 }
 
 export async function getTopics(queryParams?: any) {
-  const endpoint = `${BASE_URL}/topics?`;
+  const endpoint = `${BACKEND_HOST}/topics?`;
   const res = await fetch(endpoint + new URLSearchParams(queryParams), {
     cache: "no-store",
   });
@@ -41,7 +41,7 @@ export async function getTopics(queryParams?: any) {
 export async function createTopics(body: ITopic[]) {
   const payload = JSON.stringify(body);
 
-  const endpoint = `${BASE_URL}/topics`;
+  const endpoint = `${BACKEND_HOST}/topics`;
   const res = await fetch(endpoint, {
     body: payload,
     method: "POST",
@@ -52,7 +52,7 @@ export async function createTopics(body: ITopic[]) {
 }
 
 export async function getTopicById(topicId: string, queryParams?: any) {
-  const endpoint = `${BASE_URL}/topics/${topicId}?`;
+  const endpoint = `${BACKEND_HOST}/topics/${topicId}?`;
   const res = await fetch(endpoint + new URLSearchParams(queryParams), {
     cache: "no-cache",
   });
@@ -61,13 +61,13 @@ export async function getTopicById(topicId: string, queryParams?: any) {
 }
 
 export async function deleteTopicById(topicId: string) {
-  const endpoint = `${BASE_URL}/topics/${topicId}`;
+  const endpoint = `${BACKEND_HOST}/topics/${topicId}`;
   const res = await fetch(endpoint, { method: "DELETE" });
   return res;
 }
 
 export async function updateTopicById(topicId: string, body: ITopic) {
-  const endpoint = `${BASE_URL}/topics/${topicId}`;
+  const endpoint = `${BACKEND_HOST}/topics/${topicId}`;
   const payload = JSON.stringify(body);
   const res = await fetch(endpoint, {
     method: "PATCH",
@@ -80,7 +80,7 @@ export async function updateTopicById(topicId: string, body: ITopic) {
 export async function createQuestions(body: ITopicQuestionCreate[]) {
   const payload = JSON.stringify(body);
 
-  const endpoint = `${BASE_URL}/topic-questions`;
+  const endpoint = `${BACKEND_HOST}/topic-questions`;
   const res = await fetch(endpoint, {
     body: payload,
     method: "POST",
@@ -91,7 +91,7 @@ export async function createQuestions(body: ITopicQuestionCreate[]) {
 }
 
 export async function getTotalQuestion(topicId: string) {
-  const endpoint = `${BASE_URL}/topics/${topicId}/questions/count`;
+  const endpoint = `${BACKEND_HOST}/topics/${topicId}/questions/count`;
   const res = await fetch(endpoint, { cache: "no-cache" });
   const totalQuestions = await res.json();
   return totalQuestions;
@@ -101,7 +101,7 @@ export async function getAllQuestionsByTopic(
   topicId: string,
   queryParams?: any
 ) {
-  const endpoint = `${BASE_URL}/topics/${topicId}/questions?`;
+  const endpoint = `${BACKEND_HOST}/topics/${topicId}/questions?`;
   const res = await fetch(endpoint + new URLSearchParams(queryParams), {
     cache: "no-cache",
   });
@@ -110,7 +110,7 @@ export async function getAllQuestionsByTopic(
 }
 
 export async function getQuestionById(questionId: string) {
-  const endpoint = `${BASE_URL}/topic-questions/${questionId}`;
+  const endpoint = `${BACKEND_HOST}/topic-questions/${questionId}`;
   const res = await fetch(endpoint, { method: "GET" });
   const data = await res.json();
   return data;
@@ -120,7 +120,7 @@ export async function getQuestionDetails(
   topicId: string,
   questionPage: string
 ) {
-  const endpoint = `${BASE_URL}/topics/${topicId}/questions?`;
+  const endpoint = `${BACKEND_HOST}/topics/${topicId}/questions?`;
 
   const res = await fetch(
     endpoint +
@@ -135,7 +135,7 @@ export async function getQuestionDetails(
 
   const questionId = question?.ID;
 
-  const questionDetailsEndpoint = `${BASE_URL}/topic-questions/${questionId}`;
+  const questionDetailsEndpoint = `${BACKEND_HOST}/topic-questions/${questionId}`;
   const questRes = await fetch(questionDetailsEndpoint, {
     cache: "no-cache",
   });
@@ -148,7 +148,7 @@ export async function getQuestionDetailsSafe(
   topicId: string,
   questionPage: string
 ) {
-  const endpoint = `${BASE_URL}/topics/${topicId}/questions?`;
+  const endpoint = `${BACKEND_HOST}/topics/${topicId}/questions?`;
 
   const res = await fetch(
     endpoint +
@@ -162,7 +162,7 @@ export async function getQuestionDetailsSafe(
   const question = questions[0];
   const questionId = question.ID;
 
-  const questionDetailsEndpoint = `${BASE_URL}/topic-questions-safe/${questionId}`;
+  const questionDetailsEndpoint = `${BACKEND_HOST}/topic-questions-safe/${questionId}`;
   const questRes = await fetch(questionDetailsEndpoint, {
     cache: "no-cache",
   });
@@ -172,7 +172,7 @@ export async function getQuestionDetailsSafe(
 }
 
 export async function deleteQuestionById(questionId: string) {
-  const endpoint = `${BASE_URL}/topic-questions/${questionId}`;
+  const endpoint = `${BACKEND_HOST}/topic-questions/${questionId}`;
   const res = await fetch(endpoint, { method: "DELETE" });
   return res;
 }
@@ -181,7 +181,7 @@ export async function updateQuestionById(
   questionId: string,
   body: Partial<ITopicQuestion>
 ) {
-  const endpoint = `${BASE_URL}/topic-questions/${questionId}`;
+  const endpoint = `${BACKEND_HOST}/topic-questions/${questionId}`;
   const payload = JSON.stringify(body);
   const res = await fetch(endpoint, {
     method: "PATCH",
@@ -195,7 +195,7 @@ export async function updateOptionById(
   optionId: string,
   body: Partial<ITopicQuestionOption>
 ) {
-  const endpoint = `${BASE_URL}/question-options/${optionId}`;
+  const endpoint = `${BACKEND_HOST}/question-options/${optionId}`;
   const payload = JSON.stringify(body);
   const res = await fetch(endpoint, {
     method: "PATCH",
@@ -206,7 +206,7 @@ export async function updateOptionById(
 }
 
 export async function deleteOptionById(optionId: string) {
-  const endpoint = `${BASE_URL}/question-options/${optionId}`;
+  const endpoint = `${BACKEND_HOST}/question-options/${optionId}`;
   const res = await fetch(endpoint, {
     method: "DELETE",
   });
@@ -214,7 +214,7 @@ export async function deleteOptionById(optionId: string) {
 }
 
 export async function createOptions(body: Partial<ITopicQuestionOption[]>) {
-  const endpoint = `${BASE_URL}/question-options`;
+  const endpoint = `${BACKEND_HOST}/question-options`;
   const payload = JSON.stringify(body);
   const res = await fetch(endpoint, {
     method: "POST",

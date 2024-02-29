@@ -2,6 +2,7 @@ package routes
 
 import (
 	"exam-app/backend/controllers"
+	"exam-app/backend/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,7 +11,7 @@ func AttemptRoutes(r *gin.Engine) *gin.Engine {
 
 	// Attempts
 	r.GET("/attempts", controllers.GetAllAttempts)
-	r.POST("/attempts", controllers.CreateAttempts)
+	r.POST("/attempts", middleware.RequireAuth, controllers.CreateAttempts)
 	r.GET("/attempts/:id", controllers.GetOneAttempt)
 	r.GET("/attempts/:id/answers", controllers.GetOneAttemptAnswers)
 	r.POST("/attempts/:id/submit", controllers.SubmitOneAttempt)
