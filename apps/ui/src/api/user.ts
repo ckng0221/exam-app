@@ -7,6 +7,7 @@ export interface IUser {
   Role: string;
   CreatedAt: string;
   UpdatedAt: string;
+  ProfilePic: string;
 }
 
 export async function getUsers({
@@ -62,6 +63,23 @@ export async function deleteUserById(userId: string) {
   const endpoint = `${BACKEND_HOST}/users/${userId}`;
   const res = await fetch(endpoint, {
     method: "DELETE",
+  });
+  return res;
+}
+
+export async function uploadProfilePicture(
+  userId: string,
+  file: any,
+  filename: string
+) {
+  const endpoint = `${BACKEND_HOST}/users/${userId}/profile-picture`;
+
+  const formdata = new FormData();
+  formdata.append("file", file, filename);
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    body: formdata,
   });
   return res;
 }

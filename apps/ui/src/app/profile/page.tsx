@@ -1,10 +1,14 @@
 import { IAttempt, getAttempts } from "@/api/attempt";
 import { validateCookieToken } from "@/api/auth";
 import { Unauthorized } from "@/components/error/ErrorComp";
+
 import { cookies } from "next/headers";
+import { Avatar, Chip } from "@mui/material";
 import Link from "next/link";
-import Badge from "../../components/Badge";
-import { Chip } from "@mui/material";
+import ProfilePictureUpload from "./ProfilePictureUpload";
+import Image from "next/image";
+import { IUser } from "../../api/user";
+import { getBlobUrl } from "../../api/common";
 
 export default async function page() {
   const accessToken = cookies().get("Authorization");
@@ -24,7 +28,7 @@ export default async function page() {
 
   return (
     <div className="p-4">
-      <Profile Name={user.Name} Email={user.Email} />
+      <Profile user={user} />
       <hr className="my-4" />
       <Attempts user_id={user.ID} />
     </div>
@@ -32,15 +36,18 @@ export default async function page() {
 }
 
 interface IProfileProps {
-  Name: string;
-  Email: string;
+  user: IUser;
 }
 
-function Profile(props: IProfileProps) {
+function Profile({ user }: IProfileProps) {
+  const imagePath = getBlobUrl(user.ProfilePic);
+
   return (
     <>
-      <p>Name: {props.Name}</p>
-      <p>Email: {props.Email}</p>
+      <Avatar alt="profile picture" src={imagePath} />
+      <p>Name: {user.Name}</p>
+      <p>Email: {user.Email}</p>
+      <ProfilePictureUpload user={user} />
     </>
   );
 }

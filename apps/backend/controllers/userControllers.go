@@ -148,3 +148,16 @@ func DeleteOneUser(c *gin.Context) {
 func GetUserRoles(c *gin.Context) {
 	c.JSON(http.StatusOK, models.Roles)
 }
+
+func UploadProfilePicture(c *gin.Context) {
+	userId := c.Param("id")
+
+	file, _ := c.FormFile("file")
+	// log.Println(file.Filename)
+
+	filePath := fmt.Sprintf("./blob/profilepic/%s/%s", userId, file.Filename)
+	// Upload the file to specific dst.
+	c.SaveUploadedFile(file, filePath)
+
+	c.JSON(http.StatusOK, gin.H{"filepath": filePath})
+}

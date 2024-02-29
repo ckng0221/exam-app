@@ -33,6 +33,9 @@ func SetupRouter() *gin.Engine {
 	// Attempt
 	AttemptRoutes(r)
 
+	// Static files
+	r.Static("/blob", "./blob")
+
 	docs.SwaggerInfo.BasePath = ""
 
 	// url := ginSwagger.URL("http://localhost:8000/swagger/doc.json")

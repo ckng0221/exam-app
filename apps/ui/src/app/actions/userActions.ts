@@ -1,5 +1,10 @@
 "use server";
-import { IUser, deleteUserById, updateUserById } from "../../api/user";
+import {
+  IUser,
+  deleteUserById,
+  updateUserById,
+  uploadProfilePicture,
+} from "../../api/user";
 import { revalidatePage } from "./revalidateActions";
 
 export async function updateUserAction(user: IUser) {
@@ -46,5 +51,30 @@ export async function deleteUserAction(userId: string) {
     console.error(err);
     // return { message: JSON.stringify(String(err)) };
     return { message: "Failed to delete user" };
+  }
+}
+
+export async function uploadPicture(formData: FormData) {
+  const userId = formData.get("user-id")?.toString() || "";
+  if (!userId)
+    return {
+      message: "user ID cannot be null",
+    };
+
+  const file: any = formData.get("profile-picture");
+
+  let res = await uploadProfilePicture(userId, file, file?.name);
+  const data = await res.json();
+
+  const filepath = data.filepath;
+  const payload = {
+    ProfilePic: String(filepath).slice(1),
+  };
+  res = await updateUserById(userId, payload);
+  if (res.ok) {
+    revalidatePage("/profile");
+    return { message: "success" };
+  } else {
+    return { message: "Failed to upload photo" };
   }
 }
