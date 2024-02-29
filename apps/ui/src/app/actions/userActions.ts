@@ -56,20 +56,22 @@ export async function deleteUserAction(userId: string) {
 
 export async function uploadPicture(formData: FormData) {
   const userId = formData.get("user-id")?.toString() || "";
+
   if (!userId)
     return {
       message: "user ID cannot be null",
     };
 
-  const file: any = formData.get("profile-picture");
+  const file = formData.get("profile-picture") as File | null;
+  let res: Response;
+  let payload: Partial<IUser> = {};
+  if (file && file.size > 0) {
+    res = await uploadProfilePicture(userId, file, file.name);
+    const data = await res?.json();
+    const filepath = data.filepath;
+    payload["ProfilePic"] = String(filepath);
+  }
 
-  let res = await uploadProfilePicture(userId, file, file?.name);
-  const data = await res.json();
-
-  const filepath = data.filepath;
-  const payload = {
-    ProfilePic: String(filepath).slice(1),
-  };
   res = await updateUserById(userId, payload);
   if (res.ok) {
     revalidatePage("/profile");

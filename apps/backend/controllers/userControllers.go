@@ -156,8 +156,9 @@ func UploadProfilePicture(c *gin.Context) {
 	// log.Println(file.Filename)
 
 	filePath := fmt.Sprintf("./blob/profilepic/%s/%s", userId, file.Filename)
-	// Upload the file to specific dst.
+	// Upload file
 	c.SaveUploadedFile(file, filePath)
+	cleanedFilePath := filePath[1:] // remove relative .
 
-	c.JSON(http.StatusOK, gin.H{"filepath": filePath})
+	c.JSON(http.StatusOK, gin.H{"filepath": cleanedFilePath})
 }
