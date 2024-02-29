@@ -16,7 +16,7 @@ import { revalidateLayout, revalidatePage } from "./revalidateActions";
 export async function deleteTopicAction(topicId: string) {
   if (!topicId) return;
   await deleteTopicById(topicId);
-  revalidatePage("/admin");
+  revalidatePage("/admin/topics");
 }
 
 export async function deleteQuestionAction(
@@ -53,7 +53,7 @@ export async function updateTopicAction(formData: FormData) {
 
   const res = await updateTopicById(topicId, payload);
   if (res.ok) {
-    revalidatePage("/admin");
+    revalidatePage("/admin/topics");
     return { message: "success" };
   } else {
     return { message: "error" };
@@ -65,7 +65,7 @@ export async function createTopicAction(formData: FormData) {
 
   const res = await createTopics([payload]);
   if (res.ok) {
-    revalidatePage("/admin");
+    revalidatePage("/admin/topics");
     return { message: "success" };
   } else {
     return { message: "error" };

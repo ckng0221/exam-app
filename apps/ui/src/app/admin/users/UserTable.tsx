@@ -1,13 +1,18 @@
 "use client";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton } from "@mui/material";
+import { Chip, IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { IUser } from "../../../api/user";
-// import DeleteTopicIconBtn from "./DeleteTopicIconBtn";
+import DeleteUserIconBtn from "./DeleteUserIconBtn";
 
 interface IProps {
   users: IUser[];
 }
+
+const roleColor: any = {
+  admin: "error",
+  member: "default",
+};
 
 export function UserTable({ users }: IProps) {
   const router = useRouter();
@@ -60,7 +65,11 @@ export function UserTable({ users }: IProps) {
                   {user.Name}
                 </th>
                 <td className="py-4">{user.Email}</td>
-                <td className="py-4">{user.Role}</td>
+                <td className="py-4">
+                  {user.Role && (
+                    <Chip label={user.Role} color={roleColor[user.Role]} />
+                  )}
+                </td>
                 <td className="py-4">{user.CreatedAt}</td>
 
                 <td className="py-4">
@@ -74,10 +83,10 @@ export function UserTable({ users }: IProps) {
                     <EditIcon />
                   </IconButton>
 
-                  {/* <DeleteTopicIconBtn
-                    topicId={user.ID || ""}
-                    topicName={user.Name}
-                  /> */}
+                  <DeleteUserIconBtn
+                    userId={user.ID || ""}
+                    userName={user.Name}
+                  />
                 </td>
               </tr>
             );

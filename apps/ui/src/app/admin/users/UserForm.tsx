@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 import { toast } from "react-hot-toast";
 import { IUser } from "../../../api/user";
 import { updateUserAction } from "../../actions/userActions";
-// import DeleteTopicIconBtn from "../DeleteTopicIconBtn";
+import DeleteUserIconBtn from "./DeleteUserIconBtn";
 
 export default function UserForm({
   user,
@@ -40,10 +40,7 @@ export default function UserForm({
             </div>
 
             <div className="justify-self-end">
-              {/* <DeleteTopicIconBtn
-                  topicId={topic.ID || ""}
-                  topicName={topic.Name}
-                /> */}
+              <DeleteUserIconBtn userId={user.ID || ""} userName={user.Name} />
             </div>
           </div>
 

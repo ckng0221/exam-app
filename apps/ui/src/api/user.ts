@@ -57,3 +57,11 @@ export async function updateUserById(userId: string, body: Partial<IUser>) {
   });
   return res;
 }
+
+export async function deleteUserById(userId: string) {
+  const endpoint = `${BACKEND_HOST}/users/${userId}`;
+  const res = await fetch(endpoint, {
+    method: "DELETE",
+  });
+  return res;
+}
