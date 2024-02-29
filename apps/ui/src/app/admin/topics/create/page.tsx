@@ -22,7 +22,7 @@ export default async function page() {
   };
   const breadcrumbs = [
     { name: "Admin", href: "/admin" },
-    { name: "Topic", href: "/admin" },
+    { name: "Topics", href: "/admin/topics" },
     { name: "Create", href: "/admin/topics/create" },
   ];
 

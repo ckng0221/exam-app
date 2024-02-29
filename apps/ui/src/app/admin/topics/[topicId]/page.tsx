@@ -22,7 +22,7 @@ export default async function TopicEditPage({
   const topic = await getTopicById(params.topicId);
   const breadcrumbs = [
     { name: "Admin", href: "/admin" },
-    { name: "Topic", href: "/admin" },
+    { name: "Topics", href: "/admin/topics" },
     { name: params.topicId, href: `/admin/topics/${params.topicId}` },
   ];
 
