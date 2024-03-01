@@ -41,7 +41,7 @@ export default function ProfileForm({
       <div className="mb-5">
         <label
           htmlFor="name"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          className="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           Name
         </label>
@@ -49,7 +49,7 @@ export default function ProfileForm({
           type="text"
           id="name"
           value={userInput.Name}
-          className={inputClassName}
+          className={`${inputClassName}`}
           name="name"
           required
           onChange={(e) => setUserInput({ ...userInput, Name: e.target.value })}
@@ -64,7 +64,7 @@ export default function ProfileForm({
       <div className="mb-5">
         <label
           htmlFor="email"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          className="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           Email
         </label>
@@ -86,9 +86,20 @@ export default function ProfileForm({
           }
         />
       </div>
-      <Button variant="outlined" type="submit" className="my-4">
-        Submit
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          variant="outlined"
+          type="button"
+          color="inherit"
+          className="my-4"
+          onClick={() => router.push("/profile")}
+        >
+          Cancel
+        </Button>
+        <Button variant="outlined" type="submit" color="error" className="my-4">
+          Update
+        </Button>
+      </div>
     </form>
   );
 }

@@ -14,7 +14,7 @@ export default async function Topic({
   // console.log(topic);
 
   return (
-    <div className="p-4">
+    <div className="p-8">
       <div className="mb-4">
         <p>
           Topic: <b>{topic.Name}</b>

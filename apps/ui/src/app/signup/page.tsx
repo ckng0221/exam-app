@@ -52,7 +52,7 @@ export default function Page() {
         >
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="required block text-gray-700 text-sm font-bold mb-2"
               htmlFor="name"
             >
               Name
@@ -67,7 +67,7 @@ export default function Page() {
           </div>
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="required block text-gray-700 text-sm font-bold mb-2"
               htmlFor="email"
             >
               Email
@@ -82,7 +82,7 @@ export default function Page() {
           </div>
           <div className="mb-2">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="required block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
             >
               Password
@@ -99,7 +99,7 @@ export default function Page() {
           </div>
           <div className="mb-2">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="required block text-gray-700 text-sm font-bold mb-2"
               htmlFor="confirmpassword"
             >
               Confirm Password

@@ -50,7 +50,7 @@ async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
 
   return (
     <div className="mb-4">
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto sm:rounded-lg">
         <table className=" text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
             <tr>
