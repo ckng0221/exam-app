@@ -1,10 +1,12 @@
 import { IAttempt, getAttempts } from "@/api/attempt";
 import { validateCookieToken } from "@/api/auth";
 import { Unauthorized } from "@/components/error/ErrorComp";
+import EditIcon from "@mui/icons-material/Edit";
+import { Avatar, Chip, IconButton, Tooltip } from "@mui/material";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import Badge from "../../components/Badge";
-import { Chip } from "@mui/material";
+import { getBlobUrl } from "../../api/common";
+import { IUser } from "../../api/user";
 
 export default async function page() {
   const accessToken = cookies().get("Authorization");
@@ -24,7 +26,7 @@ export default async function page() {
 
   return (
     <div className="p-4">
-      <Profile Name={user.Name} Email={user.Email} />
+      <Profile user={user} />
       <hr className="my-4" />
       <Attempts user_id={user.ID} />
     </div>
@@ -32,15 +34,28 @@ export default async function page() {
 }
 
 interface IProfileProps {
-  Name: string;
-  Email: string;
+  user: IUser;
 }
 
-function Profile(props: IProfileProps) {
+function Profile({ user }: IProfileProps) {
+  const imagePath = getBlobUrl(user.ProfilePic);
+
   return (
     <>
-      <p>Name: {props.Name}</p>
-      <p>Email: {props.Email}</p>
+      <div className="flex">
+        <Link href="/profile">
+          <Avatar alt="profile picture" src={imagePath} />
+        </Link>
+        <Tooltip title="Edit profile">
+          <Link href="/profile/edit">
+            <IconButton aria-label="edit" color="primary">
+              <EditIcon />
+            </IconButton>
+          </Link>
+        </Tooltip>
+      </div>
+      <p>Name: {user.Name}</p>
+      <p>Email: {user.Email}</p>
     </>
   );
 }

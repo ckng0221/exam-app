@@ -35,9 +35,10 @@ function QuestionLinks({
 }) {
   return (
     <>
-      {questions.map((question) => {
+      {questions.map((question, idx) => {
         return (
           <QuestionLink
+            idx={idx}
             topicId={topicId}
             key={question.ID}
             question={question}
@@ -50,9 +51,11 @@ function QuestionLinks({
 }
 
 function QuestionLink({
+  idx,
   topicId,
   question,
 }: {
+  idx: number;
   topicId: string;
   question: ITopicQuestion;
 }) {
@@ -61,7 +64,7 @@ function QuestionLink({
   return (
     <div className="mb-4">
       <Link href={path} component={NextLink}>
-        Question ID:&nbsp;
+        {idx + 1}) Question ID:&nbsp;
         {question.ID}
       </Link>
     </div>

@@ -16,9 +16,9 @@ export default function Page() {
     // console.log(res);
 
     if (res?.message === "success") {
-      const username = formData.get("email")?.toString().split("@")[0] || "";
+      // const username = formData.get("email")?.toString().split("@")[0] || "";
       router.push("/");
-      toast.success(`Welcome ${username}!`);
+      toast.success(`Welcome ${res.name}!`);
     }
   }
 
@@ -41,6 +41,15 @@ export default function Page() {
               id="email"
               name="email"
               type="text"
+              required
+              onInvalid={(e) =>
+                (e.target as HTMLInputElement).setCustomValidity(
+                  "Please enter your email"
+                )
+              }
+              onInput={(e) =>
+                (e.target as HTMLInputElement).setCustomValidity("")
+              }
             />
           </div>
           <div className="mb-6">
@@ -55,6 +64,15 @@ export default function Page() {
               id="password"
               type="password"
               name="password"
+              required
+              onInvalid={(e) =>
+                (e.target as HTMLInputElement).setCustomValidity(
+                  "Please enter your password"
+                )
+              }
+              onInput={(e) =>
+                (e.target as HTMLInputElement).setCustomValidity("")
+              }
             />
           </div>
           <p aria-live="polite" className="text-red-500 mb-4">

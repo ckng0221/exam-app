@@ -11,10 +11,11 @@ const (
 
 type User struct {
 	gorm.Model
-	Name     string `gorm:"type:varchar(100)"`
-	Email    string `gorm:"unique"`
-	Password string `gorm:"type:varchar(255)" json:"-"`
-	Role     Role   `gorm:"type:enum('admin', 'member') default:member"`
+	Name       string `gorm:"type:varchar(100)"`
+	Email      string `gorm:"unique"`
+	Password   string `gorm:"type:varchar(255)" json:"-"`
+	Role       Role   `gorm:"type:enum('admin', 'member') default:member"`
+	ProfilePic string `gorm:"type:varchar(255)"`
 }
 
 var Roles = [2]string{string(Admin), string(Member)}
