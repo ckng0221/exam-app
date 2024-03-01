@@ -1,14 +1,12 @@
 import { IAttempt, getAttempts } from "@/api/attempt";
 import { validateCookieToken } from "@/api/auth";
 import { Unauthorized } from "@/components/error/ErrorComp";
-
+import EditIcon from "@mui/icons-material/Edit";
+import { Avatar, Chip, IconButton, Tooltip } from "@mui/material";
 import { cookies } from "next/headers";
-import { Avatar, Chip } from "@mui/material";
 import Link from "next/link";
-import ProfilePictureUpload from "./ProfilePictureUpload";
-import Image from "next/image";
-import { IUser } from "../../api/user";
 import { getBlobUrl } from "../../api/common";
+import { IUser } from "../../api/user";
 
 export default async function page() {
   const accessToken = cookies().get("Authorization");
@@ -44,10 +42,20 @@ function Profile({ user }: IProfileProps) {
 
   return (
     <>
-      <Avatar alt="profile picture" src={imagePath} />
+      <div className="flex">
+        <Link href="/profile">
+          <Avatar alt="profile picture" src={imagePath} />
+        </Link>
+        <Tooltip title="Edit profile">
+          <Link href="/profile/edit">
+            <IconButton aria-label="edit" color="primary">
+              <EditIcon />
+            </IconButton>
+          </Link>
+        </Tooltip>
+      </div>
       <p>Name: {user.Name}</p>
       <p>Email: {user.Email}</p>
-      <ProfilePictureUpload user={user} />
     </>
   );
 }

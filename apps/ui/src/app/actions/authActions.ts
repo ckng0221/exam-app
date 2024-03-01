@@ -22,7 +22,7 @@ export async function loginAction(formData: FormData) {
         httpOnly: true,
         path: "/",
       });
-      return { message: "success" };
+      return { message: "success", name: res.name };
     } else {
       return { message: "Email or password incorrect." };
     }
