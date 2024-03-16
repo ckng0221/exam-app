@@ -62,7 +62,7 @@ func CreateTopics(c *gin.Context) {
 		c.AbortWithError(400, err)
 		return
 	}
-	fmt.Println(string(body))
+	// fmt.Println(string(body))
 
 	err = json.Unmarshal(body, &topics)
 
