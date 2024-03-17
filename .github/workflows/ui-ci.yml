@@ -1,0 +1,30 @@
+name: UI-CI
+
+on:
+  push:
+    branches: ["*"]
+    paths:
+      - "apps/ui/**"
+      - ".github/workflows/ui-ci.yml"
+
+env:
+  MODULE: ui
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci --workspace=$MODULE
+      - run: npm run lint --workspace=$MODULE
+      - run: npm run build --workspace=$MODULE
