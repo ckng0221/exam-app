@@ -10,13 +10,16 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "start": "turbo start",
-    "test": "turbo test"
+    "test": "turbo test",
+    "format": "prettier . --write"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "react-hot-toast": "^2.4.1",
     "turbo": "^1.12.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
   }
 }
