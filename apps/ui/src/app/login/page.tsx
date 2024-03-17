@@ -44,7 +44,7 @@ export default function Page() {
               required
               onInvalid={(e) =>
                 (e.target as HTMLInputElement).setCustomValidity(
-                  "Please enter your email"
+                  "Please enter your email",
                 )
               }
               onInput={(e) =>
@@ -67,7 +67,7 @@ export default function Page() {
               required
               onInvalid={(e) =>
                 (e.target as HTMLInputElement).setCustomValidity(
-                  "Please enter your password"
+                  "Please enter your password",
                 )
               }
               onInput={(e) =>

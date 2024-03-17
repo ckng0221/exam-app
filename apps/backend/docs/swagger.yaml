@@ -19,111 +19,111 @@ paths:
   /:
     get:
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
       summary: Health check
       tags:
-      - Default
+        - Default
   /attempts:
     get:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
       summary: Get all attempts
       tags:
-      - Attempt
+        - Attempt
     post:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: Attempts
-        in: body
-        name: body
-        required: true
-        schema:
-          items:
-            $ref: '#/definitions/controllers.CreateAttempt'
-          type: array
+        - description: Attempts
+          in: body
+          name: body
+          required: true
+          schema:
+            items:
+              $ref: "#/definitions/controllers.CreateAttempt"
+            type: array
       produces:
-      - application/json
+        - application/json
       responses:
         "201":
           description: Created
       summary: Create attempts
       tags:
-      - Attempt
+        - Attempt
   /attempts/{id}:
     get:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
+        - description: ID
+          in: path
+          name: id
+          required: true
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
       summary: Get one attempt
       tags:
-      - Attempt
+        - Attempt
   /topics:
     get:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
       summary: Get all topics
       tags:
-      - Topic
+        - Topic
     post:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: Topics
-        in: body
-        name: body
-        required: true
-        schema:
-          items:
-            $ref: '#/definitions/controllers.CreateTopic'
-          type: array
+        - description: Topics
+          in: body
+          name: body
+          required: true
+          schema:
+            items:
+              $ref: "#/definitions/controllers.CreateTopic"
+            type: array
       produces:
-      - application/json
+        - application/json
       responses:
         "201":
           description: Created
       summary: Create topics
       tags:
-      - Topic
+        - Topic
   /topics/{id}:
     get:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
+        - description: ID
+          in: path
+          name: id
+          required: true
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
       summary: Get one topic
       tags:
-      - Topic
+        - Topic
 swagger: "2.0"

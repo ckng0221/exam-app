@@ -21,7 +21,7 @@ export default async function ExamAttempt({
   } else {
     fetchResult = await getQuestionDetailsSafe(
       params.topicId,
-      params.questionPage
+      params.questionPage,
     );
   }
   questionId = fetchResult.questionId;
