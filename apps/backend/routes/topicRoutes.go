@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TopicRoutes(r *gin.Engine) *gin.Engine {
+func TopicRoutes(r *gin.Engine) {
 
 	// Topics
 
@@ -33,5 +33,4 @@ func TopicRoutes(r *gin.Engine) *gin.Engine {
 	r.PATCH("/question-options/:id", controllers.UpdateOneQuestionOption)
 	r.DELETE("/question-options/:id", controllers.DeleteOneQuestionOption)
 
-	return r
 }

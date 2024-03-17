@@ -1,7 +1,9 @@
 const BACKEND_HOST = process.env.BACKEND_HOST || "http://localhost:8000";
 
+const MODULE = "auth";
+
 export async function login(email: string, password: string) {
-  const endpoint = `${BACKEND_HOST}/login`;
+  const endpoint = `${BACKEND_HOST}/${MODULE}/login`;
 
   const payload = JSON.stringify({ email, password });
   const res = await fetch(endpoint, {
@@ -16,7 +18,7 @@ export async function login(email: string, password: string) {
 }
 
 export async function validateCookieToken(access_token: string) {
-  const endpoint = `${BACKEND_HOST}/validate`;
+  const endpoint = `${BACKEND_HOST}/${MODULE}/validate`;
 
   const headers = new Headers();
   headers.append("Cookie", `Authorization=${access_token}`);
@@ -27,7 +29,7 @@ export async function validateCookieToken(access_token: string) {
 }
 
 export async function logout() {
-  const endpoint = `${BACKEND_HOST}/logout`;
+  const endpoint = `${BACKEND_HOST}/${MODULE}/logout`;
 
   const res = await fetch(endpoint, {
     method: "POST",
@@ -37,7 +39,7 @@ export async function logout() {
 }
 
 export async function signup(name: string, email: string, password: string) {
-  const endpoint = `${BACKEND_HOST}/signup`;
+  const endpoint = `${BACKEND_HOST}/${MODULE}/signup`;
 
   const payload = JSON.stringify({ name, email, password });
   const res = await fetch(endpoint, {

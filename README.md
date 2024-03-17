@@ -30,6 +30,7 @@ Install dependencies
 $ npm install
 
 # Go dependencies
+$ go get github.com/githubnemo/CompileDaemon
 $ go install github.com/githubnemo/CompileDaemon
 
 # At ./apps/backend

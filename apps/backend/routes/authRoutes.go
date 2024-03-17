@@ -7,10 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthRoutes(r *gin.Engine) *gin.Engine {
+func AuthRoutes(r *gin.RouterGroup) {
 
 	r.POST("/login", controllers.Login)
 	r.POST("/logout", controllers.Logout)
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
-	return r
 }
