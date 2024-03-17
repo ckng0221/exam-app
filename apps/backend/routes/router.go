@@ -25,11 +25,13 @@ func SetupRouter() *gin.Engine {
 	})
 
 	// Auth
-	AuthRoutes(r)
+	auth := r.Group("/auth")
+	AuthRoutes(auth)
 	// User
 	UserRoutes(r)
 	// Topic
 	TopicRoutes(r)
+
 	// Attempt
 	AttemptRoutes(r)
 

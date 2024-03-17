@@ -36,7 +36,7 @@ export async function getAttemptById(attemptId: string) {
 
 export async function getAttemptAnswerByQuestionId(
   attemptId: string,
-  questionId: string
+  questionId: string,
 ) {
   const endpoint = `${BACKEND_HOST}/attempts/${attemptId}/answers?`;
   const res = await fetch(
@@ -46,7 +46,7 @@ export async function getAttemptAnswerByQuestionId(
       }),
     {
       cache: "no-store",
-    }
+    },
   );
   const data = await res.json();
   return data[0]?.Answer;
@@ -95,7 +95,7 @@ export async function submitAnswer(attemptId: string) {
 export async function createOrUpdateAnswer(
   attemptId: string,
   questionId: string,
-  answer: string
+  answer: string,
 ) {
   const endpoint = `${BACKEND_HOST}/attempt-answers`;
   const payload = JSON.stringify({

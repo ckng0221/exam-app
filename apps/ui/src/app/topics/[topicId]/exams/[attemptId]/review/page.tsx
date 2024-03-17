@@ -65,7 +65,7 @@ async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
           <tbody>
             {questions.map((question, idx) => {
               const questionAnswer = attemptAnswers.find(
-                (x: any) => x.QuestionID === question.ID
+                (x: any) => x.QuestionID === question.ID,
               );
               const questionPage = idx + 1;
 

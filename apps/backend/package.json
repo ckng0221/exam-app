@@ -6,7 +6,7 @@
   "scripts": {
     "build": "go build .",
     "dev": "CompileDaemon -command='./backend'",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "go test ./tests",
     "start": "./backend"
   },
   "keywords": [],

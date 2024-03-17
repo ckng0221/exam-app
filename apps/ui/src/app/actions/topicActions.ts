@@ -21,7 +21,7 @@ export async function deleteTopicAction(topicId: string) {
 
 export async function deleteQuestionAction(
   topicId: string,
-  questionId: string
+  questionId: string,
 ) {
   if (!questionId) return;
   await deleteQuestionById(questionId);
@@ -93,7 +93,7 @@ export async function updateAdminQuestionAction(formData: FormData) {
 
   // delete options
   const removedOptions = JSON.parse(
-    formData.get("removed-options")?.toString() || ""
+    formData.get("removed-options")?.toString() || "",
   );
   removedOptions.map(async (option: { id: string }) => {
     if (!option.id) return;
@@ -102,13 +102,13 @@ export async function updateAdminQuestionAction(formData: FormData) {
 
   // Update options
   const rowArray = optionData.map((option) =>
-    Number(option[0].split("-rowidx-")[1])
+    Number(option[0].split("-rowidx-")[1]),
   );
   const totalRows = Math.max(...rowArray) + 1;
 
   for (let i = 0; i < totalRows; i++) {
     const optionRowData = optionData.filter((x) =>
-      String(x[0]).endsWith(`-rowidx-${i}`)
+      String(x[0]).endsWith(`-rowidx-${i}`),
     );
 
     const key = optionRowData[0];
@@ -116,10 +116,10 @@ export async function updateAdminQuestionAction(formData: FormData) {
     const optionId = String(key).split("-")[1];
 
     const optionCode = optionRowData.find((x) =>
-      String(x[0]).includes("optioncode")
+      String(x[0]).includes("optioncode"),
     )?.[1];
     const description = optionRowData.find((x) =>
-      String(x[0]).includes("description")
+      String(x[0]).includes("description"),
     )?.[1];
 
     let payload: any = {
@@ -190,10 +190,10 @@ export async function createAdminQuestionAction(formData: FormData) {
     });
 
     const optionCode = optionRowData.find((x) =>
-      String(x[0]).includes("optioncode")
+      String(x[0]).includes("optioncode"),
     )?.[1];
     const description = optionRowData.find((x) =>
-      String(x[0]).includes("description")
+      String(x[0]).includes("description"),
     )?.[1];
 
     console.log(questionId);

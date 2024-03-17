@@ -70,7 +70,7 @@ export async function deleteUserById(userId: string) {
 export async function uploadProfilePicture(
   userId: string,
   file: any,
-  filename: string
+  filename: string,
 ) {
   const endpoint = `${BACKEND_HOST}/users/${userId}/profile-picture`;
 

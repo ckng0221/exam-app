@@ -1,3 +1,6 @@
+[![Backend-CI](https://github.com/ckng0221/exam-app/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/ckng0221/exam-app/actions/workflows/backend-ci.yml)
+[![UI-CI](https://github.com/ckng0221/exam-app/actions/workflows/ui-ci.yml/badge.svg)](https://github.com/ckng0221/exam-app/actions/workflows/ui-ci.yml)
+
 # Exam App
 
 The `Exam App` is an Online Examination App. The Exam App allows users (admins) to create topics and questions, and publish the topics for users to perform attempt.
@@ -30,6 +33,7 @@ Install dependencies
 $ npm install
 
 # Go dependencies
+$ go get github.com/githubnemo/CompileDaemon
 $ go install github.com/githubnemo/CompileDaemon
 
 # At ./apps/backend

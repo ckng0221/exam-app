@@ -1,0 +1,33 @@
+name: Backend-CI
+
+on:
+  push:
+    branches: ["*"]
+    paths:
+      - "apps/backend/**"
+      - ".github/workflows/backend-ci.yml"
+
+env:
+  MODULE: backend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go-version: ["1.22.x"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Install dependencies
+        working-directory: ./apps/backend
+        run: go mod download
+      - name: Run test
+        run: npm run test --workspace=$MODULE
+      - name: Run build
+        run: npm run build --workspace=$MODULE

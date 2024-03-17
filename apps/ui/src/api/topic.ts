@@ -99,7 +99,7 @@ export async function getTotalQuestion(topicId: string) {
 
 export async function getAllQuestionsByTopic(
   topicId: string,
-  queryParams?: any
+  queryParams?: any,
 ) {
   const endpoint = `${BACKEND_HOST}/topics/${topicId}/questions?`;
   const res = await fetch(endpoint + new URLSearchParams(queryParams), {
@@ -118,7 +118,7 @@ export async function getQuestionById(questionId: string) {
 
 export async function getQuestionDetails(
   topicId: string,
-  questionPage: string
+  questionPage: string,
 ) {
   const endpoint = `${BACKEND_HOST}/topics/${topicId}/questions?`;
 
@@ -128,7 +128,7 @@ export async function getQuestionDetails(
         page: questionPage,
         "page-size": "1",
       }),
-    { cache: "no-cache" }
+    { cache: "no-cache" },
   );
   const questions = await res.json();
   const question = questions[0];
@@ -146,7 +146,7 @@ export async function getQuestionDetails(
 
 export async function getQuestionDetailsSafe(
   topicId: string,
-  questionPage: string
+  questionPage: string,
 ) {
   const endpoint = `${BACKEND_HOST}/topics/${topicId}/questions?`;
 
@@ -156,7 +156,7 @@ export async function getQuestionDetailsSafe(
         page: questionPage,
         "page-size": "1",
       }),
-    { cache: "no-cache" }
+    { cache: "no-cache" },
   );
   const questions = await res.json();
   const question = questions[0];
@@ -179,7 +179,7 @@ export async function deleteQuestionById(questionId: string) {
 
 export async function updateQuestionById(
   questionId: string,
-  body: Partial<ITopicQuestion>
+  body: Partial<ITopicQuestion>,
 ) {
   const endpoint = `${BACKEND_HOST}/topic-questions/${questionId}`;
   const payload = JSON.stringify(body);
@@ -193,7 +193,7 @@ export async function updateQuestionById(
 
 export async function updateOptionById(
   optionId: string,
-  body: Partial<ITopicQuestionOption>
+  body: Partial<ITopicQuestionOption>,
 ) {
   const endpoint = `${BACKEND_HOST}/question-options/${optionId}`;
   const payload = JSON.stringify(body);

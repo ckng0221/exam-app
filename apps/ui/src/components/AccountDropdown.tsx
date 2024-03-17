@@ -46,7 +46,7 @@ export default function DropDown({
                   href="/profile"
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    "block px-4 py-2 text-sm",
                   )}
                 >
                   Profile
@@ -62,7 +62,7 @@ export default function DropDown({
                     href="/admin"
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm"
+                      "block px-4 py-2 text-sm",
                     )}
                   >
                     <AdminPanelSettingsIcon />
@@ -78,7 +78,7 @@ export default function DropDown({
                 <LogoutBtn
                   className={classNames(
                     "hover:bg-gray-100 hover:text-gray-900 text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    "block px-4 py-2 text-sm",
                   )}
                 />
               )}

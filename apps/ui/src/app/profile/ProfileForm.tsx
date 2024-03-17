@@ -55,7 +55,7 @@ export default function ProfileForm({
           onChange={(e) => setUserInput({ ...userInput, Name: e.target.value })}
           onInvalid={(e) =>
             (e.target as HTMLInputElement).setCustomValidity(
-              "Please enter your name"
+              "Please enter your name",
             )
           }
           onInput={(e) => (e.target as HTMLInputElement).setCustomValidity("")}
@@ -77,7 +77,7 @@ export default function ProfileForm({
           required
           onInvalid={(e) =>
             (e.target as HTMLInputElement).setCustomValidity(
-              "Please enter your email"
+              "Please enter your email",
             )
           }
           onInput={(e) => (e.target as HTMLInputElement).setCustomValidity("")}
