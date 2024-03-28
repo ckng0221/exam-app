@@ -88,3 +88,43 @@ func Logout(c *gin.Context) {
 		"message": "logged out",
 	})
 }
+
+func Signup(c *gin.Context) {
+	// Get the email/pass off req bodyu
+	var body struct {
+		Name     string
+		Email    string
+		Password string
+	}
+
+	if c.Bind(&body) != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": "Failed to read body",
+		})
+		return
+	}
+
+	// hash the password
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
+
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": "Failed to hash password",
+		})
+		return
+	}
+
+	// Create the user
+	user := models.User{Name: body.Name, Email: body.Email, Password: string(hash), Role: "member"}
+	result := initializers.Db.Create(&user)
+
+	if result.Error != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": "Failed to create user",
+		})
+		return
+	}
+
+	// Respond
+	c.JSON(http.StatusCreated, user)
+}

@@ -9,6 +9,7 @@ import (
 
 func AuthRoutes(r *gin.RouterGroup) {
 
+	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
 	r.POST("/logout", controllers.Logout)
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)

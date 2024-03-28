@@ -19,6 +19,8 @@ export default function Page() {
       // const username = formData.get("email")?.toString().split("@")[0] || "";
       router.push("/");
       toast.success(`Welcome ${res.name}!`);
+    } else {
+      toast.error(res.error || "");
     }
   }
 

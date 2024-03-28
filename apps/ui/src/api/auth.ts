@@ -6,15 +6,22 @@ export async function login(email: string, password: string) {
   const endpoint = `${BACKEND_HOST}/${MODULE}/login`;
 
   const payload = JSON.stringify({ email, password });
-  const res = await fetch(endpoint, {
-    method: "POST",
-    body: payload,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const login = await res.json();
-  return login;
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      body: payload,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.ok) {
+      const login = await res.json();
+      return login;
+    }
+    throw res.status;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function validateCookieToken(access_token: string) {
@@ -40,15 +47,17 @@ export async function logout() {
 
 export async function signup(name: string, email: string, password: string) {
   const endpoint = `${BACKEND_HOST}/${MODULE}/signup`;
-
-  const payload = JSON.stringify({ name, email, password });
-  const res = await fetch(endpoint, {
-    method: "POST",
-    body: payload,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const signup = await res.json();
-  return signup;
+  try {
+    const payload = JSON.stringify({ name, email, password });
+    const res = await fetch(endpoint, {
+      method: "POST",
+      body: payload,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res;
+  } catch (err) {
+    console.error("error", err);
+  }
 }
