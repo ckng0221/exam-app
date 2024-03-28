@@ -14,7 +14,7 @@ type User struct {
 	Name       string `gorm:"type:varchar(100)"`
 	Email      string `gorm:"unique"`
 	Password   string `gorm:"type:varchar(255)" json:"-"`
-	Role       Role   `gorm:"type:enum('admin', 'member') default:member"`
+	Role       Role   `gorm:"type:enum('admin', 'member'); default:member"`
 	ProfilePic string `gorm:"type:varchar(255)"`
 }
 

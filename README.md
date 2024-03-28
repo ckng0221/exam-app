@@ -22,6 +22,7 @@ The `Exam App` is an Online Examination App. The Exam App allows users (admins) 
 ## Build
 
 - Build tool: `Tuborepo`
+- Multi-container tool: `Docker compose`
 
 # Get started
 
@@ -29,7 +30,7 @@ Install dependencies
 
 ```bash
 # JavaScript dependencies
-# At project root
+# At the project root
 $ npm install
 
 # Go dependencies
@@ -44,14 +45,22 @@ Run Application
 
 ```bash
 
-# At project root
-# Dev mode
+# At the project root
+# Development mode
 npm run dev
 
 # Build
 npm run build
 
-# Start
+# Production mode
 npm run start
 
 ```
+
+# Contributing
+
+Contributions are welcome! If you'd like to contribute to this project, please follow the guidelines outlined in CONTRIBUTING.md.
+
+# License
+
+This project is licensed under the MIT License.

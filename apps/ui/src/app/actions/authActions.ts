@@ -1,9 +1,7 @@
 "use server";
 import { login, signup } from "@/api/auth";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { getUsers } from "../../api/user";
-import { revalidatePath } from "next/cache";
 
 export async function loginAction(formData: FormData) {
   const email = formData.get("email")?.toString();
@@ -14,7 +12,7 @@ export async function loginAction(formData: FormData) {
     if (password == null) throw "Password cannot be null";
     const res = await login(email, password);
     //   console.log(res);
-    if (res.access_token) {
+    if (res?.access_token) {
       // set cookies
       cookies().set({
         name: "Authorization",
@@ -27,7 +25,8 @@ export async function loginAction(formData: FormData) {
       return { message: "Email or password incorrect." };
     }
   } catch (err) {
-    return { error: "Login Error" };
+    console.error(err);
+    return { error: "Failed to login" };
   }
 }
 
@@ -67,7 +66,7 @@ export async function signupAction(formData: FormData) {
 
   const res = await signup(name, email, password);
   // console.log(res);
-  if (res.ID) {
+  if (res?.ok) {
     return { message: "success" };
     // redirect("/login");
   } else {

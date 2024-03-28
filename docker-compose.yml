@@ -1,0 +1,71 @@
+# NOTE: The ports of internal services (eg. book, customer, payment, borrowing) are not exposed in production
+
+services:
+  # app services
+  backend:
+    build:
+      context: .
+      dockerfile: ./apps/backend/Dockerfile
+      target: production
+      args:
+        service: backend
+    env_file:
+      - ./apps/backend/.env
+    environment:
+      - DB_URL=dbuser:dbuser123@tcp(mysql:3306)/exam_app?charset=utf8mb4&parseTime=True&loc=UTC
+      - JWT_SECRET=your-jwt-secret
+    depends_on:
+      - mysql
+    restart: always
+    networks:
+      - node-network
+    links:
+      - mysql
+    ports:
+      - "8000:8000"
+
+  ui:
+    build:
+      context: .
+      dockerfile: ./apps/ui/Dockerfile
+    environment:
+      - BACKEND_HOST=http://backend:8000
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    links:
+      - backend
+    networks:
+      - node-network
+    restart: always
+
+  # Dependencies
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD_ENCRYPTED: false
+      MYSQL_DATABASE: "exam_app"
+      MYSQL_USER: "dbuser"
+      MYSQL_ROOT_PASSWORD: "dbuser123"
+      MYSQL_PASSWORD: "dbuser123"
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql-db:/var/lib/mysql
+    networks:
+      - node-network
+
+volumes:
+  mysql-db:
+networks:
+  node-network:
+    driver: bridge
+# ---
+# Comands
+# docker compose up -d
+# docker compose up -d --build
+# docker compose down
+# docker compose down -v  # delete volume
