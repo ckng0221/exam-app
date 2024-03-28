@@ -56,3 +56,11 @@ npm run build
 npm run start
 
 ```
+
+# Contributing
+
+Contributions are welcome! If you'd like to contribute to this project, please follow the guidelines outlined in CONTRIBUTING.md.
+
+# License
+
+This project is licensed under the MIT License.
