@@ -6,11 +6,14 @@ import { getUsers } from "../../api/user";
 export async function loginAction(formData: FormData) {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
+  const turnstileToken = formData.get("cf-turnstile-response")?.toString();
+  // console.log(formData);
 
   try {
     if (email == null) throw "Email cannot be null";
     if (password == null) throw "Password cannot be null";
-    const res = await login(email, password);
+
+    const res = await login(email, password, turnstileToken);
     //   console.log(res);
     if (res?.access_token) {
       // set cookies

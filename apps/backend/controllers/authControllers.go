@@ -1,8 +1,12 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"exam-app/backend/initializers"
 	"exam-app/backend/models"
+	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -15,8 +19,9 @@ import (
 func Login(c *gin.Context) {
 	// Get the email and pass off req body
 	var body struct {
-		Email    string
-		Password string
+		Email          string `json:"email"`
+		Password       string `json:"password"`
+		TurnstileToken string `json:"turnstile_token"`
 	}
 
 	if c.Bind(&body) != nil {
@@ -25,6 +30,68 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+
+	// TODO: validate
+	// fmt.Println("token", body.TurnstileToken)
+	// validate Turnstile Token
+	turnstileUrl := os.Getenv("TURNSTILE_URL")
+
+	// form := url.Values{}
+	// form.Add("secret", os.Getenv("TURNSTILE_SECRET_KEY"))
+	// form.Add("response", body.TurnstileToken)
+	payload := struct {
+		Secret   string `json:"secret"`
+		Response string `json:"response"`
+	}{
+		Secret:   os.Getenv("TURNSTILE_SECRET_KEY"),
+		Response: body.TurnstileToken,
+	}
+	payloadByte, err := json.Marshal(&payload)
+	if err != nil {
+		c.AbortWithStatus(500)
+		log.Println("Failed to marshal payload")
+		return
+	}
+	req, err := http.NewRequest("POST", turnstileUrl, bytes.NewBuffer(payloadByte))
+	req.Header.Set("Content-Type", "application/json")
+	if err != nil {
+		c.AbortWithStatus(500)
+		log.Println("Failed to process request for Turnstile")
+		return
+	}
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		c.AbortWithStatus(500)
+		log.Println("Failed to send request for Turnstile validation")
+		return
+	}
+	resBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Failed to get response body")
+	}
+	turnstileRes := struct {
+		Success      bool   `json:"success"`
+		ErrorCodes   any    `json:"error-codes"`
+		ChallengesTs string `json:"challenge_ts"`
+		Hostname     string `json:"hostname"`
+		Action       string `json:"action"`
+	}{}
+
+	err = json.Unmarshal(resBody, &turnstileRes)
+	if err != nil {
+		log.Println("Failed to unmarshal Turnstile Response")
+	}
+	if turnstileRes.Success {
+		log.Println("Turnstile validation successful")
+	} else {
+		log.Println("Turnstile validation failed")
+		// optional, to block if failed validation
+		// c.JSON(http.StatusUnauthorized, gin.H{
+		// 	"error": "Failed Turnstile validation",
+		// })
+	}
+
 	// Look up requested user
 	var user models.User
 	initializers.Db.First(&user, "email = ?", body.Email)
@@ -37,7 +104,7 @@ func Login(c *gin.Context) {
 	}
 
 	// Compare sent in pass with saved user pass hash
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid email or password",

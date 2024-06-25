@@ -4,10 +4,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { loginAction } from "../actions/authActions";
+import Turnstile, { useTurnstile } from "react-turnstile";
 
 export default function Page() {
   const [msgState, setMsgState] = useState<any>({ message: "", error: "" });
   const router = useRouter();
+  // const turnstile = useTurnstile();
 
   async function handleLogin(formData: FormData) {
     // Mix server action and client action
@@ -25,8 +27,8 @@ export default function Page() {
   }
 
   return (
-    <div className="p-4 flex">
-      <div className="w-full max-w-xs">
+    <div className="p-4 flex justify-center">
+      <div className="">
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           action={handleLogin}
@@ -80,6 +82,15 @@ export default function Page() {
           <p aria-live="polite" className="text-red-500 mb-4">
             {msgState?.message !== "success" && msgState?.message}
           </p>
+          <div className="my-4">
+            <Turnstile
+              sitekey={
+                process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY ||
+                "1x00000000000000000000AA"
+              }
+              // onVerify={() => {}}
+            />
+          </div>
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
