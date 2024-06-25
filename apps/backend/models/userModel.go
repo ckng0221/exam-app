@@ -9,6 +9,10 @@ const (
 	Member Role = "member"
 )
 
+func (r Role) String() string {
+	return string(r)
+}
+
 type User struct {
 	gorm.Model
 	Name       string `gorm:"type:varchar(100)"`
@@ -18,4 +22,4 @@ type User struct {
 	ProfilePic string `gorm:"type:varchar(255)"`
 }
 
-var Roles = [2]string{string(Admin), string(Member)}
+var Roles = [...]Role{Admin, Member}

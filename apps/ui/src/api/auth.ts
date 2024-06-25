@@ -2,10 +2,18 @@ const BACKEND_HOST = process.env.BACKEND_HOST || "http://localhost:8000";
 
 const MODULE = "auth";
 
-export async function login(email: string, password: string) {
+export async function login(
+  email: string,
+  password: string,
+  turnstileToken?: string,
+) {
   const endpoint = `${BACKEND_HOST}/${MODULE}/login`;
 
-  const payload = JSON.stringify({ email, password });
+  const payload = JSON.stringify({
+    email,
+    password,
+    turnstile_token: turnstileToken,
+  });
   try {
     const res = await fetch(endpoint, {
       method: "POST",
