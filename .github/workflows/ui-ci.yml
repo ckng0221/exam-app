@@ -6,6 +6,7 @@ on:
     paths:
       - "apps/ui/**"
       - ".github/workflows/ui-ci.yml"
+  workflow_dispatch:
 
 env:
   MODULE: ui
