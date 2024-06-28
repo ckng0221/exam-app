@@ -7,6 +7,10 @@ export interface IAttempt {
   TopicID: number;
   IsSubmitted: boolean;
   IsPass: boolean;
+  CreatedAt: string;
+  UpdatedAt: string;
+  SubmitDate: string;
+  ScorePercentage: number;
 }
 
 export interface IAttemptAnswer {

@@ -1,4 +1,8 @@
-import { getAttemptAnswerByQuestionId, getAttemptById } from "@/api/attempt";
+import {
+  IAttempt,
+  getAttemptAnswerByQuestionId,
+  getAttemptById,
+} from "@/api/attempt";
 import {
   getQuestionDetails,
   getQuestionDetailsSafe,
@@ -6,13 +10,14 @@ import {
 } from "@/api/topic";
 import AnswerOption from "./AnswerOption";
 import Link from "next/link";
+import Timer from "../../../../../../../components/Timer";
 
 export default async function ExamAttempt({
   params,
 }: {
   params: { topicId: string; attemptId: string; questionPage: string };
 }) {
-  const attempt = await getAttemptById(params.attemptId);
+  const attempt: IAttempt = await getAttemptById(params.attemptId);
   const isSubmitted = attempt.IsSubmitted ? true : false;
   let questionId, question, questionDetail;
   let fetchResult;
@@ -48,6 +53,16 @@ export default async function ExamAttempt({
 
   return (
     <div className="p-4 md:pl-16">
+      <div className="grid grid-cols-2">
+        <div></div>
+        <div>
+          Time:{" "}
+          <Timer
+            startTimestamp={attempt.CreatedAt}
+            endTimestamp={attempt.SubmitDate}
+          />
+        </div>
+      </div>
       <div className="mb-4">
         <p className="">Question: {params.questionPage}</p>
         <p>{question.Question}</p>

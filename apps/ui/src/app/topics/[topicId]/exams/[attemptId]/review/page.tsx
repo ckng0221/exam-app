@@ -1,4 +1,5 @@
 import {
+  IAttempt,
   IAttemptAnswer,
   getAttemptAnswers,
   getAttemptById,
@@ -8,6 +9,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 import SubmitBtn from "./SubmitBtn";
+import Timer from "@/components/Timer";
 
 interface IProps {
   topicId: string;
@@ -43,6 +45,7 @@ export default async function page({ params }: { params: IProps }) {
 }
 
 async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
+  const attempt: IAttempt = await getAttemptById(attemptId);
   const questions: ITopicQuestion[] = await getAllQuestionsByTopic(topicId);
   const attemptAnswers: IAttemptAnswer[] = await getAttemptAnswers(attemptId);
 
@@ -51,6 +54,15 @@ async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
   return (
     <div className="mb-4">
       <div className="relative overflow-x-auto sm:rounded-lg">
+        <div className="mb-4">
+          <div>
+            Time:{" "}
+            <Timer
+              startTimestamp={attempt.CreatedAt}
+              endTimestamp={attempt.SubmitDate}
+            />
+          </div>
+        </div>
         <table className=" text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
             <tr>
