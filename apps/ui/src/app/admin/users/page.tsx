@@ -15,6 +15,7 @@ export default async function page() {
   ];
 
   const users = await getUsers();
+  if (!users) throw "Failed to fetch get users";
 
   return (
     <div className="p-4">

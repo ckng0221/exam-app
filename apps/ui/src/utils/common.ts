@@ -9,6 +9,9 @@ export async function getUserByCookie() {
   let user;
   if (accessToken) {
     user = await validateCookieToken(accessToken.value);
+    if (user == undefined) {
+      throw "Failed to fetch validateCookieToken";
+    }
     if (user.ID) {
       isLoggedIn = true;
     }

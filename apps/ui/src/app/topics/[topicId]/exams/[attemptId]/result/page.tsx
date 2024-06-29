@@ -26,7 +26,8 @@ export default async function page({
 }: {
   params: { topicId: string; attemptId: string };
 }) {
-  const attempt: IAttempt = await getAttemptById(params.attemptId);
+  const attempt = await getAttemptById(params.attemptId);
+  if (!attempt) throw "Failed to load attempt";
   const reviewPath = `/topics/${params.topicId}/exams/${params.attemptId}/review`;
   const questionPath = `/topics/${params.topicId}/exams/${params.attemptId}/questions/1`;
   const passOrFail = attempt.IsPass ? "Passed" : "Failed";

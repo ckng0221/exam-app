@@ -17,7 +17,8 @@ export default async function ExamAttempt({
 }: {
   params: { topicId: string; attemptId: string; questionPage: string };
 }) {
-  const attempt: IAttempt = await getAttemptById(params.attemptId);
+  const attempt = await getAttemptById(params.attemptId);
+  if (!attempt) throw "Failed to fetch get attempt";
   const isSubmitted = attempt.IsSubmitted ? true : false;
   let questionId, question, questionDetail;
   let fetchResult;
@@ -29,13 +30,16 @@ export default async function ExamAttempt({
       params.questionPage,
     );
   }
+  if (fetchResult == undefined) throw "Failed to fetch getQuestionDetails";
   questionId = fetchResult.questionId;
   question = fetchResult.question;
   questionDetail = fetchResult.questionDetail;
   const correctAnswer = isSubmitted ? questionDetail?.CorrectAnswer : "";
 
-  const existingAnswer =
-    (await getAttemptAnswerByQuestionId(params.attemptId, questionId)) || "";
+  const existingAnswer = await getAttemptAnswerByQuestionId(
+    params.attemptId,
+    questionId,
+  );
   const totalQuestions = (await getTotalQuestion(params.topicId)) || 0;
 
   const btnClass =
@@ -73,7 +77,7 @@ export default async function ExamAttempt({
         attemptId={params.attemptId}
         questionId={questionId}
         options={questionDetail.QuestionOptions?.sort(compareByOptionCode)}
-        existingAnswer={existingAnswer}
+        existingAnswer={existingAnswer || ""}
         radioDisabled={isSubmitted}
         correctAnswer={correctAnswer}
       />

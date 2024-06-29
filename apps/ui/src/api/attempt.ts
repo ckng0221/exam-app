@@ -20,100 +20,164 @@ export interface IAttemptAnswer {
   Answer: string;
 }
 
-export async function getAttempts(queryParams?: any) {
-  const endpoint = `${BACKEND_HOST}/attempts?`;
-  const res = await fetch(endpoint + new URLSearchParams(queryParams), {
-    cache: "no-store",
-  });
-  const data = await res.json();
-  return data;
+export async function getAttempts(
+  queryParams?: any,
+): Promise<IAttempt[] | undefined> {
+  try {
+    const endpoint = `${BACKEND_HOST}/attempts?`;
+    const res = await fetch(endpoint + new URLSearchParams(queryParams), {
+      cache: "no-store",
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-export async function getAttemptById(attemptId: string) {
-  const endpoint = `${BACKEND_HOST}/attempts/${attemptId}`;
-  const res = await fetch(endpoint, {
-    cache: "no-store",
-  });
-  const data = await res.json();
-  return data;
+export async function getAttemptById(
+  attemptId: string,
+): Promise<IAttempt | undefined> {
+  try {
+    const endpoint = `${BACKEND_HOST}/attempts/${attemptId}`;
+    const res = await fetch(endpoint, {
+      cache: "no-store",
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function getAttemptAnswerByQuestionId(
   attemptId: string,
   questionId: string,
 ) {
-  const endpoint = `${BACKEND_HOST}/attempts/${attemptId}/answers?`;
-  const res = await fetch(
-    endpoint +
-      new URLSearchParams({
-        questionid: questionId,
-      }),
-    {
-      cache: "no-store",
-    },
-  );
-  const data = await res.json();
-  return data[0]?.Answer;
-}
+  try {
+    const endpoint = `${BACKEND_HOST}/attempts/${attemptId}/answers?`;
 
-export async function getAttemptAnswers(attemptId: string) {
-  const endpoint = `${BACKEND_HOST}/attempts/${attemptId}/answers`;
-  const res = await fetch(endpoint, {
-    cache: "no-store",
-  });
-  const data = await res.json();
-  return data;
-}
-
-export async function createAttempts(topicID: string, access_token: string) {
-  if (!topicID) throw "TopicID cannot be null";
-
-  const headers = new Headers();
-  headers.append("Cookie", `Authorization=${access_token}`);
-  headers.append("Content-Type", "application/json");
-
-  const endpoint = `${BACKEND_HOST}/attempts`;
-
-  const res = await fetch(endpoint, {
-    method: "POST",
-    body: JSON.stringify([
+    const res = await fetch(
+      endpoint +
+        new URLSearchParams({
+          questionid: questionId,
+        }),
       {
-        TopicId: Number(topicID),
+        cache: "no-store",
       },
-    ]),
-    headers,
-  });
-  const attempts = await res.json();
-  return attempts;
+    );
+    if (res.ok) {
+      const data: IAttemptAnswer[] = await res.json();
+      return data[0]?.Answer;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-export async function submitAnswer(attemptId: string) {
-  const endpoint = `${BACKEND_HOST}/attempts/${attemptId}/submit`;
-  const res = await fetch(endpoint, {
-    method: "POST",
-  });
-  const data = await res.json();
-  return data;
+export async function getAttemptAnswers(
+  attemptId: string,
+): Promise<IAttemptAnswer[] | undefined> {
+  try {
+    const endpoint = `${BACKEND_HOST}/attempts/${attemptId}/answers`;
+    const res = await fetch(endpoint, {
+      cache: "no-store",
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function createAttempts(
+  topicID: string,
+  access_token: string,
+): Promise<IAttempt[] | undefined> {
+  try {
+    const headers = new Headers();
+    headers.append("Cookie", `Authorization=${access_token}`);
+    headers.append("Content-Type", "application/json");
+
+    const endpoint = `${BACKEND_HOST}/attempts`;
+
+    const res = await fetch(endpoint, {
+      method: "POST",
+      body: JSON.stringify([
+        {
+          TopicId: Number(topicID),
+        },
+      ]),
+      headers,
+    });
+    if (res.ok) {
+      const attempts = await res.json();
+      return attempts;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function submitAnswer(
+  attemptId: string,
+): Promise<IAttemptAnswer | undefined> {
+  try {
+    const endpoint = `${BACKEND_HOST}/attempts/${attemptId}/submit`;
+    const res = await fetch(endpoint, {
+      method: "POST",
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function createOrUpdateAnswer(
   attemptId: string,
   questionId: string,
   answer: string,
-) {
-  const endpoint = `${BACKEND_HOST}/attempt-answers`;
-  const payload = JSON.stringify({
-    AttemptID: Number(attemptId),
-    QuestionID: Number(questionId),
-    Answer: answer,
-  });
-  const res = await fetch(endpoint, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: payload,
-  });
-  const data = await res.json();
-  return data;
+): Promise<IAttemptAnswer | undefined> {
+  try {
+    const endpoint = `${BACKEND_HOST}/attempt-answers`;
+    const payload = JSON.stringify({
+      AttemptID: Number(attemptId),
+      QuestionID: Number(questionId),
+      Answer: answer,
+    });
+    const res = await fetch(endpoint, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: payload,
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
 }

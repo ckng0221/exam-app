@@ -16,7 +16,9 @@ export default async function page({ params }: { params: { userId: string } }) {
   ];
 
   const user = await getUserById(params.userId);
+  if (!user) throw "Failed to fetch user";
   const roles = await getUserRoles();
+  if (!roles) throw "Failed to fetch roles";
 
   return (
     <div className="p-4">

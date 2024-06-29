@@ -1,15 +1,10 @@
-import {
-  IAttempt,
-  IAttemptAnswer,
-  getAttemptAnswers,
-  getAttemptById,
-} from "@/api/attempt";
+import { getAttemptAnswers, getAttemptById } from "@/api/attempt";
 import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/topic";
-import DoneIcon from "@mui/icons-material/Done";
+import Timer from "@/components/Timer";
 import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
 import Link from "next/link";
 import SubmitBtn from "./SubmitBtn";
-import Timer from "@/components/Timer";
 
 interface IProps {
   topicId: string;
@@ -19,6 +14,7 @@ interface IProps {
 
 export default async function page({ params }: { params: IProps }) {
   const attempt = await getAttemptById(params.attemptId);
+  if (!attempt) throw "Failed to load attempt";
 
   const isSubmitted = attempt.IsSubmitted;
 
@@ -45,9 +41,13 @@ export default async function page({ params }: { params: IProps }) {
 }
 
 async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
-  const attempt: IAttempt = await getAttemptById(attemptId);
-  const questions: ITopicQuestion[] = await getAllQuestionsByTopic(topicId);
-  const attemptAnswers: IAttemptAnswer[] = await getAttemptAnswers(attemptId);
+  const attempt = await getAttemptById(attemptId);
+  if (!attempt) throw "Failed to fetch attempt";
+
+  const questions = await getAllQuestionsByTopic(topicId);
+  if (!questions) throw "Failed to fetch getAllQuestionsByTopic";
+  const attemptAnswers = await getAttemptAnswers(attemptId);
+  if (!attemptAnswers) throw "Failed to fetch attempt answers";
 
   const questionPath = `/topics/${topicId}/exams/${attemptId}/questions`;
 
