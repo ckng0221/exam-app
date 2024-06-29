@@ -20,6 +20,7 @@ export default async function TopicEditPage({
   if (user.Role !== "admin") return <Forbidden />;
 
   const topic = await getTopicById(params.topicId);
+  if (!topic) throw "Failed to fetch topic by ID";
   const breadcrumbs = [
     { name: "Admin", href: "/admin" },
     { name: "Topics", href: "/admin/topics" },

@@ -13,6 +13,7 @@ async function QuestionsAdminPage({ params }: { params: { topicId: string } }) {
   ];
 
   const questions = await getAllQuestionsByTopic(params.topicId);
+  if (questions == undefined) throw "Failed to fetch getAllQuestionsByTopic";
 
   return (
     <div className="p-4">

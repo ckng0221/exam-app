@@ -1,3 +1,5 @@
+import { IUser } from "./user";
+
 const BACKEND_HOST = process.env.BACKEND_HOST || "http://localhost:8000";
 
 const MODULE = "auth";
@@ -32,25 +34,39 @@ export async function login(
   }
 }
 
-export async function validateCookieToken(access_token: string) {
-  const endpoint = `${BACKEND_HOST}/${MODULE}/validate`;
+export async function validateCookieToken(
+  access_token: string,
+): Promise<IUser | undefined> {
+  try {
+    const endpoint = `${BACKEND_HOST}/${MODULE}/validate`;
 
-  const headers = new Headers();
-  headers.append("Cookie", `Authorization=${access_token}`);
+    const headers = new Headers();
+    headers.append("Cookie", `Authorization=${access_token}`);
 
-  const res = await fetch(endpoint, { headers: headers });
-  const user = await res.json();
-  return user;
+    const res = await fetch(endpoint, { headers: headers });
+    if (res.ok) {
+      const user = await res.json();
+      return user;
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function logout() {
-  const endpoint = `${BACKEND_HOST}/${MODULE}/logout`;
+  try {
+    const endpoint = `${BACKEND_HOST}/${MODULE}/logout`;
 
-  const res = await fetch(endpoint, {
-    method: "POST",
-  });
-  const data = await res.json();
-  return data;
+    const res = await fetch(endpoint, {
+      method: "POST",
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function signup(name: string, email: string, password: string) {

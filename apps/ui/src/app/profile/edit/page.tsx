@@ -13,6 +13,7 @@ export default async function page() {
   let user;
   if (accessToken) {
     user = await validateCookieToken(accessToken.value);
+    if (!user) throw "Failed to validate cookie token";
     if (user.ID) {
       isLoggedIn = true;
     }

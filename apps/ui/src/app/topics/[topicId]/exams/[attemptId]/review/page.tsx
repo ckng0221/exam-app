@@ -1,11 +1,8 @@
-import {
-  IAttemptAnswer,
-  getAttemptAnswers,
-  getAttemptById,
-} from "@/api/attempt";
+import { getAttemptAnswers, getAttemptById } from "@/api/attempt";
 import { ITopicQuestion, getAllQuestionsByTopic } from "@/api/topic";
-import DoneIcon from "@mui/icons-material/Done";
+import Timer from "@/components/Timer";
 import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
 import Link from "next/link";
 import SubmitBtn from "./SubmitBtn";
 
@@ -17,6 +14,7 @@ interface IProps {
 
 export default async function page({ params }: { params: IProps }) {
   const attempt = await getAttemptById(params.attemptId);
+  if (!attempt) throw "Failed to load attempt";
 
   const isSubmitted = attempt.IsSubmitted;
 
@@ -43,14 +41,28 @@ export default async function page({ params }: { params: IProps }) {
 }
 
 async function ReviewTable({ topicId, attemptId, isSubmitted }: IProps) {
-  const questions: ITopicQuestion[] = await getAllQuestionsByTopic(topicId);
-  const attemptAnswers: IAttemptAnswer[] = await getAttemptAnswers(attemptId);
+  const attempt = await getAttemptById(attemptId);
+  if (!attempt) throw "Failed to fetch attempt";
+
+  const questions = await getAllQuestionsByTopic(topicId);
+  if (!questions) throw "Failed to fetch getAllQuestionsByTopic";
+  const attemptAnswers = await getAttemptAnswers(attemptId);
+  if (!attemptAnswers) throw "Failed to fetch attempt answers";
 
   const questionPath = `/topics/${topicId}/exams/${attemptId}/questions`;
 
   return (
     <div className="mb-4">
       <div className="relative overflow-x-auto sm:rounded-lg">
+        <div className="mb-4">
+          <div>
+            Time:{" "}
+            <Timer
+              startTimestamp={attempt.CreatedAt}
+              endTimestamp={attempt.SubmitDate}
+            />
+          </div>
+        </div>
         <table className=" text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
             <tr>

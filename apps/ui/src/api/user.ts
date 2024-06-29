@@ -18,7 +18,7 @@ export async function getUsers({
   email?: string;
   page?: number;
   pageSize?: number;
-} = {}) {
+} = {}): Promise<IUser[] | undefined> {
   const endpoint = `${BACKEND_HOST}/users?`;
 
   const queryParam: any = {};
@@ -26,45 +26,76 @@ export async function getUsers({
   if (page) queryParam["page"] = page;
   if (pageSize) queryParam["page-size"] = pageSize;
 
-  const res = await fetch(endpoint + new URLSearchParams(queryParam), {
-    cache: "no-store",
-  });
-
-  const users = await res.json();
-  return users;
+  try {
+    const res = await fetch(endpoint + new URLSearchParams(queryParam), {
+      cache: "no-store",
+    });
+    if (res.ok) {
+      const users = await res.json();
+      return users;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-export async function getUserById(userId: string) {
-  const endpoint = `${BACKEND_HOST}/users/${userId}`;
-  const res = await fetch(endpoint, { cache: "no-cache" });
-  const user = await res.json();
-  return user;
+export async function getUserById(userId: string): Promise<IUser | undefined> {
+  try {
+    const endpoint = `${BACKEND_HOST}/users/${userId}`;
+    const res = await fetch(endpoint, { cache: "no-cache" });
+    if (res.ok) {
+      const user = await res.json();
+      return user;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-export async function getUserRoles() {
-  const endpoint = `${BACKEND_HOST}/roles`;
-  const res = await fetch(endpoint, { cache: "no-cache" });
-  const roles = await res.json();
-  return roles;
+export async function getUserRoles(): Promise<string[] | undefined> {
+  try {
+    const endpoint = `${BACKEND_HOST}/roles`;
+    const res = await fetch(endpoint, { cache: "no-cache" });
+    if (res.ok) {
+      const roles = await res.json();
+      return roles;
+    }
+    console.error("HTTP status failed");
+    console.error(res.status, res.statusText);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function updateUserById(userId: string, body: Partial<IUser>) {
-  const endpoint = `${BACKEND_HOST}/users/${userId}`;
-  const payload = JSON.stringify(body);
-  const res = await fetch(endpoint, {
-    method: "PATCH",
-    body: payload,
-    headers: { "Content-Type": "application/json" },
-  });
-  return res;
+  try {
+    const endpoint = `${BACKEND_HOST}/users/${userId}`;
+    const payload = JSON.stringify(body);
+    const res = await fetch(endpoint, {
+      method: "PATCH",
+      body: payload,
+      headers: { "Content-Type": "application/json" },
+    });
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function deleteUserById(userId: string) {
-  const endpoint = `${BACKEND_HOST}/users/${userId}`;
-  const res = await fetch(endpoint, {
-    method: "DELETE",
-  });
-  return res;
+  try {
+    const endpoint = `${BACKEND_HOST}/users/${userId}`;
+    const res = await fetch(endpoint, {
+      method: "DELETE",
+    });
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function uploadProfilePicture(
@@ -72,14 +103,18 @@ export async function uploadProfilePicture(
   file: any,
   filename: string,
 ) {
-  const endpoint = `${BACKEND_HOST}/users/${userId}/profile-picture`;
+  try {
+    const endpoint = `${BACKEND_HOST}/users/${userId}/profile-picture`;
 
-  const formdata = new FormData();
-  formdata.append("file", file, filename);
+    const formdata = new FormData();
+    formdata.append("file", file, filename);
 
-  const res = await fetch(endpoint, {
-    method: "POST",
-    body: formdata,
-  });
-  return res;
+    const res = await fetch(endpoint, {
+      method: "POST",
+      body: formdata,
+    });
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
 }

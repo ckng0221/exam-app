@@ -22,6 +22,7 @@ export default async function AdminQuestionPage({
   //   params.questionNumber
   // );
   const question = await getQuestionById(params.questionId);
+  if (question == undefined) throw "Failed to fetch getQuestionById";
 
   return (
     <>

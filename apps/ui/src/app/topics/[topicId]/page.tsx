@@ -9,6 +9,7 @@ export default async function Topic({
   params: { topicId: string };
 }) {
   const topic = await getTopicById(params.topicId);
+  if (!topic) throw "Failed to fetch topic by Id";
   const questionCount = await getTotalQuestion(params.topicId);
 
   // console.log(topic);
@@ -50,6 +51,7 @@ async function startExam(formData: FormData) {
   const accessToken = await getAccessTokenFromCookie();
 
   const attempts = await createAttempts(topicId, accessToken?.value || "");
+  if (!attempts) throw "Failed to create attempt";
 
   const attemptId = attempts[0].ID;
 

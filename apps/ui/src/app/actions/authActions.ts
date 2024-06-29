@@ -48,7 +48,8 @@ export async function logoutAction() {
 
 async function verifyEmail(email: string) {
   const users = await getUsers({ email });
-  console.log(users);
+  if (!users) throw "Failed to fetch users";
+  // console.log(users);
 
   if (users.length > 0) {
     return false;

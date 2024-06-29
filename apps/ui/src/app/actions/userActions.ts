@@ -25,7 +25,7 @@ export async function updateUserAction(user: IUser) {
   };
 
   const res = await updateUserById(user.ID, payload);
-  console.log(res);
+  if (!res) throw "Failed to fetch update user by ID API";
 
   if (res.ok) {
     revalidatePage("/admin/users");
@@ -39,6 +39,7 @@ export async function deleteUserAction(userId: string) {
   if (!userId) return;
   try {
     const res = await deleteUserById(userId);
+    if (!res) throw "Failed to fetch delete user API";
     revalidatePage("/admin/users");
     if (res.ok) {
       return { message: "success" };
@@ -66,19 +67,22 @@ export async function updateProfile(formData: FormData) {
     };
 
   // Update Porifle picture
-  let res: Response;
   let payload: Partial<IUser> = {};
   if (file && file.size > 0) {
     // upload photo
-    res = await uploadProfilePicture(userId, file, file.name);
-    const data = await res?.json();
-    const filepath = data.filepath;
-    payload["ProfilePic"] = String(filepath);
+    const res = await uploadProfilePicture(userId, file, file.name);
+    if (!res) throw "Failed to fetch upload profile picture API";
+    if (res.ok) {
+      const data = await res?.json();
+      const filepath = data.filepath;
+      payload["ProfilePic"] = String(filepath);
+    }
   }
   if (name) payload["Name"] = name;
   if (email) payload["Email"] = email;
 
-  res = await updateUserById(userId, payload);
+  const res = await updateUserById(userId, payload);
+  if (!res) throw "Failed to fetch update user by ID API";
   if (res.ok) {
     revalidatePage("/profile");
     return { message: "success" };

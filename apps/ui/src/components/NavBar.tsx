@@ -12,6 +12,7 @@ export default async function NavBar() {
 
   if (accessToken) {
     const user = await validateCookieToken(accessToken.value);
+    if (!user) throw "Failed to fetch calidateCookieToken";
     if (user.ID) {
       isLoggedIn = true;
     }

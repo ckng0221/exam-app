@@ -15,7 +15,10 @@ import { revalidateLayout, revalidatePage } from "./revalidateActions";
 
 export async function deleteTopicAction(topicId: string) {
   if (!topicId) return;
-  await deleteTopicById(topicId);
+  const res = await deleteTopicById(topicId);
+  if (!res || !res.ok) {
+    throw "Failed to delete topic";
+  }
   revalidatePage("/admin/topics");
 }
 
@@ -52,6 +55,7 @@ export async function updateTopicAction(formData: FormData) {
   if (!topicId) throw "TopicId required";
 
   const res = await updateTopicById(topicId, payload);
+  if (!res) throw "Failed to fetch updateTopicById";
   if (res.ok) {
     revalidatePage("/admin/topics");
     return { message: "success" };
@@ -64,7 +68,7 @@ export async function createTopicAction(formData: FormData) {
   const { payload } = getTopicFormInputs(formData);
 
   const res = await createTopics([payload]);
-  if (res.ok) {
+  if (res?.ok) {
     revalidatePage("/admin/topics");
     return { message: "success" };
   } else {
@@ -86,7 +90,8 @@ export async function updateAdminQuestionAction(formData: FormData) {
     QuestionScore: questionScore,
   };
   if (!questionId) return { message: "Question ID not found" };
-  const data = await updateQuestionById(questionId, questionPayload);
+  const res = await updateQuestionById(questionId, questionPayload);
+  if (!res) throw "Failed to fetch updateQuestionById";
 
   let optionData = Array.from(formData.entries());
   optionData = optionData.filter((x) => String(x[0]).startsWith("optionid"));
@@ -147,7 +152,7 @@ export async function updateAdminQuestionAction(formData: FormData) {
 
   await revalidateLayout();
 
-  if (data.status === 200) {
+  if (res.status === 200) {
     return { message: "success" };
   } else {
     return { message: "error" };
@@ -170,6 +175,7 @@ export async function createAdminQuestionAction(formData: FormData) {
   };
 
   const res = await createQuestions([questionPayload]);
+  if (!res) throw "Failed to fetch createQuestions";
   const data = await res.json();
   const questionId = data[0].ID;
 
@@ -214,6 +220,8 @@ export async function createAdminQuestionAction(formData: FormData) {
 
     if (optionCode || description) {
       const optionRes = await createOptions([payload]);
+      if (!optionRes) throw "Failed to fetch createOptions";
+
       if (optionRes.ok) {
         const optiondata = await optionRes?.json();
         console.log(optiondata);
